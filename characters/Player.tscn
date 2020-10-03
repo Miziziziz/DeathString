@@ -1,0 +1,46 @@
+[gd_scene load_steps=4 format=2]
+
+[ext_resource path="res://characters/Player.gd" type="Script" id=1]
+[ext_resource path="res://circle.png" type="Texture" id=2]
+
+[sub_resource type="CircleShape2D" id=1]
+radius = 15.3572
+
+[node name="Player" type="KinematicBody2D" groups=[
+"player",
+]]
+position = Vector2( 339.184, 278.748 )
+collision_layer = 2
+collision_mask = 3
+script = ExtResource( 1 )
+rope_normal_color = Color( 0.545098, 0.552941, 1, 1 )
+rope_kill_color = Color( 0.635294, 0.207843, 0.207843, 1 )
+max_rope_width = 4.0
+rope_kill_width = 8.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 1 )
+
+[node name="Sprite" type="Sprite" parent="."]
+texture = ExtResource( 2 )
+
+[node name="BulletCanCollideWithPlayerTimer" type="Timer" parent="."]
+wait_time = 0.3
+one_shot = true
+
+[node name="DeactivateRopeTimer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+
+[node name="Camera2D" type="Camera2D" parent="."]
+current = true
+drag_margin_h_enabled = true
+drag_margin_v_enabled = true
+smoothing_enabled = true
+smoothing_speed = 30.0
+
+[node name="RopeKillAnimTimer" type="Timer" parent="."]
+wait_time = 0.1
+[connection signal="timeout" from="BulletCanCollideWithPlayerTimer" to="." method="bullet_can_collide_with_player"]
+[connection signal="timeout" from="DeactivateRopeTimer" to="." method="deactivate_rope"]
+[connection signal="timeout" from="RopeKillAnimTimer" to="." method="toggle_rope_graphics"]
