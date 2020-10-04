@@ -1,28 +1,24 @@
-extends KinematicBody2D
+extends Enemy
 
-var player : KinematicBody2D
-var move_speed = 80
+enum STATES {IDLE, ATTACK}
+var cur_state = STATES.IDLE
 
-func _ready():
-	player = get_tree().get_nodes_in_group("player")[0]
-
+export var move_speed = 40
+var repel_amount = 0.5
 func _physics_process(_delta):
-	var move_vec = global_position.direction_to(player.global_position)
-	move_and_slide(move_vec * move_speed, Vector2(), false, 4, 0.785398, false)
+	if cur_state == STATES.IDLE:
+		if has_los_target_pos(player.global_position):
+			cur_state = STATES.ATTACK
+		return
+	
+	var move_vec = get_move_vec_to_point(player.global_position) #global_position.direction_to(player.global_position)
+	var repel_vec = get_repulsion_vector()
+	var updated_move_vec = move_vec * (1.0 - repel_amount) + repel_vec * repel_amount
+	move_and_slide(updated_move_vec * move_speed, Vector2(), false, 4, 0.785398, false)
 	for i in range(get_slide_count()):
 		var coll : KinematicCollision2D = get_slide_collision(i)
 		if coll.collider is RopeNode:
 			coll.collider.push(global_position.direction_to(coll.position))
-		# TODO hurt player
 
-var last_tick_hit = 0
-var times_hit_this_frame = 0
-func kill():
-	var cur_tick = OS.get_ticks_msec()
-	if last_tick_hit != cur_tick:
-		last_tick_hit = cur_tick
-		times_hit_this_frame = 0
-	times_hit_this_frame += 1
-	if times_hit_this_frame > 5:
-		queue_free()
-		$GibsSpawner.spawn_gibs()
+	play_move_anim(move_vec)
+

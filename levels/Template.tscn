@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://environment/TileMap.tscn" type="PackedScene" id=1]
 [ext_resource path="res://characters/Player.tscn" type="PackedScene" id=2]
@@ -8,7 +8,6 @@
 [ext_resource path="res://pickups/HealthPickup.tscn" type="PackedScene" id=6]
 [ext_resource path="res://pickups/MaxHealthIncreasePickup.tscn" type="PackedScene" id=7]
 [ext_resource path="res://environment/Portal.tscn" type="PackedScene" id=8]
-[ext_resource path="res://characters/Ranger.tscn" type="PackedScene" id=9]
 
 [node name="World" type="Node2D"]
 
@@ -67,36 +66,30 @@ centered = false
 ]]
 
 [node name="TileMap" parent="Navigation2D" instance=ExtResource( 1 )]
+tile_data = PoolIntArray(  )
+
+[node name="MapTopLeft" parent="Navigation2D/TileMap" index="0"]
+position = Vector2( 0, 0 )
+
+[node name="MapBotRight" parent="Navigation2D/TileMap" index="1"]
+position = Vector2( 464, 360 )
 
 [node name="Player" parent="." instance=ExtResource( 2 )]
-position = Vector2( 867.256, 702.712 )
+position = Vector2( 16, 32 )
 
 [node name="Zombie" parent="." instance=ExtResource( 3 )]
-position = Vector2( 1032, 654 )
-
-[node name="Zombie2" parent="." instance=ExtResource( 3 )]
-position = Vector2( 1023, 645 )
-
-[node name="Zombie3" parent="." instance=ExtResource( 3 )]
-position = Vector2( 1039, 670 )
-
-[node name="Zombie4" parent="." instance=ExtResource( 3 )]
-position = Vector2( 1020, 664 )
-
-[node name="Zombie5" parent="." instance=ExtResource( 3 )]
-position = Vector2( 1048, 657 )
+position = Vector2( 40, 32 )
 
 [node name="Bull" parent="." instance=ExtResource( 4 )]
-position = Vector2( 691, 690 )
+position = Vector2( 64, 32 )
 
 [node name="HealthPickup" parent="." instance=ExtResource( 6 )]
-position = Vector2( 808, 580 )
+position = Vector2( 96, 32 )
 
 [node name="MaxHealthIncreasePickup" parent="." instance=ExtResource( 7 )]
-position = Vector2( 885, 616 )
+position = Vector2( 120, 32 )
 
 [node name="Portal" parent="." instance=ExtResource( 8 )]
-position = Vector2( 915, 636 )
+position = Vector2( 144, 32 )
 
-[node name="Ranger" parent="." instance=ExtResource( 9 )]
-position = Vector2( 794, 793 )
+[editable path="Navigation2D/TileMap"]

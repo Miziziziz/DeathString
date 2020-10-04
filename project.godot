@@ -9,6 +9,21 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "KinematicBody2D",
+"class": "Enemy",
+"language": "GDScript",
+"path": "res://characters/Enemy.gd"
+}, {
+"base": "Area2D",
+"class": "HealthPickup",
+"language": "GDScript",
+"path": "res://pickups/HealthPickup.gd"
+}, {
+"base": "Area2D",
+"class": "MaxHealthIncreasePickup",
+"language": "GDScript",
+"path": "res://pickups/MaxHealthIncreasePickup.gd"
+}, {
 "base": "RigidBody2D",
 "class": "RopeNode",
 "language": "GDScript",
@@ -20,6 +35,9 @@ _global_script_classes=[ {
 "path": "res://projectiles/StringBullet.gd"
 } ]
 _global_script_class_icons={
+"Enemy": "",
+"HealthPickup": "",
+"MaxHealthIncreasePickup": "",
 "RopeNode": "",
 "StringBullet": ""
 }
@@ -27,8 +45,43 @@ _global_script_class_icons={
 [application]
 
 config/name="DeathString"
-run/main_scene="res://World.tscn"
+run/main_scene="res://levels/Tutorial.tscn"
 config/icon="res://icon.png"
+
+[autoload]
+
+LevelManager="*res://singletons/LevelManager.tscn"
+
+[display]
+
+window/size/width=1040
+mouse_cursor/custom_image="res://sprites/crosshair_open.png"
+mouse_cursor/custom_image_hotspot=Vector2( 16, 16 )
+window/stretch/mode="viewport"
+window/stretch/aspect="expand"
+
+[importer_defaults]
+
+texture={
+"compress/bptc_ldr": 0,
+"compress/hdr_mode": 0,
+"compress/lossy_quality": 0.7,
+"compress/mode": 0,
+"compress/normal_map": 0,
+"detect_3d": false,
+"flags/anisotropic": false,
+"flags/filter": false,
+"flags/mipmaps": false,
+"flags/repeat": 0,
+"flags/srgb": 2,
+"process/HDR_as_SRGB": false,
+"process/fix_alpha_border": true,
+"process/invert_color": false,
+"process/premult_alpha": false,
+"size_limit": 0,
+"stream": false,
+"svg/scale": 1.0
+}
 
 [input]
 
@@ -71,9 +124,12 @@ shoot={
 [layer_names]
 
 2d_physics/layer_1="environment"
-2d_physics/layer_2="characters"
+2d_physics/layer_2="enemies"
+2d_physics/layer_3="player"
+2d_physics/layer_4="pickups"
 
 [rendering]
 
+quality/2d/use_pixel_snap=true
 environment/default_clear_color=Color( 0, 0, 0, 1 )
 environment/default_environment="res://default_env.tres"

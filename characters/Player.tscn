@@ -1,27 +1,69 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=11 format=2]
 
 [ext_resource path="res://characters/Player.gd" type="Script" id=1]
 [ext_resource path="res://circle.png" type="Texture" id=2]
+[ext_resource path="res://sprites/heart_full.png" type="Texture" id=3]
+[ext_resource path="res://sprites/heart_empty.png" type="Texture" id=4]
+[ext_resource path="res://characters/HealthDisplay.gd" type="Script" id=5]
+[ext_resource path="res://ui/KleintenDynFont.tres" type="DynamicFont" id=6]
 
 [sub_resource type="CircleShape2D" id=1]
-radius = 15.3572
+radius = 5.0
+
+[sub_resource type="Animation" id=2]
+resource_name = "idle"
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:self_modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 0,
+"values": [ Color( 1, 1, 1, 1 ) ]
+}
+
+[sub_resource type="Animation" id=3]
+resource_name = "invincible"
+length = 0.3
+loop = true
+step = 0.05
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:self_modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.15 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ Color( 1, 0.207843, 0.207843, 1 ), Color( 1, 1, 1, 1 ) ]
+}
+
+[sub_resource type="CircleShape2D" id=4]
+radius = 11.0
 
 [node name="Player" type="KinematicBody2D" groups=[
 "player",
 ]]
-position = Vector2( 339.184, 278.748 )
-collision_layer = 2
-collision_mask = 3
+collision_layer = 6
 script = ExtResource( 1 )
+max_speed = 200
+move_accel = 40
 rope_normal_color = Color( 0.545098, 0.552941, 1, 1 )
-rope_kill_color = Color( 0.635294, 0.207843, 0.207843, 1 )
-max_rope_width = 4.0
-rope_kill_width = 8.0
+rope_kill_color = Color( 1, 1, 0.756863, 1 )
+max_rope_width = 2.0
+min_rope_width = 0.5
+rope_kill_width = 1.2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 1 )
 
 [node name="Sprite" type="Sprite" parent="."]
+scale = Vector2( 0.3, 0.3 )
 texture = ExtResource( 2 )
 
 [node name="BulletCanCollideWithPlayerTimer" type="Timer" parent="."]
@@ -34,13 +76,280 @@ one_shot = true
 
 [node name="Camera2D" type="Camera2D" parent="."]
 current = true
+zoom = Vector2( 0.5, 0.5 )
 drag_margin_h_enabled = true
 drag_margin_v_enabled = true
 smoothing_enabled = true
 smoothing_speed = 30.0
 
 [node name="RopeKillAnimTimer" type="Timer" parent="."]
-wait_time = 0.1
+wait_time = 0.05
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="HealthDisplay" type="GridContainer" parent="CanvasLayer"]
+margin_right = 40.0
+margin_bottom = 40.0
+columns = 10
+script = ExtResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HeartDisplay" type="Control" parent="CanvasLayer/HealthDisplay"]
+margin_right = 16.0
+margin_bottom = 16.0
+rect_min_size = Vector2( 16, 16 )
+
+[node name="HeartFull" type="TextureRect" parent="CanvasLayer/HealthDisplay/HeartDisplay"]
+margin_right = 16.0
+margin_bottom = 16.0
+texture = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HeartEmpty" type="TextureRect" parent="CanvasLayer/HealthDisplay/HeartDisplay"]
+margin_right = 16.0
+margin_bottom = 16.0
+texture = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HeartDisplay2" type="Control" parent="CanvasLayer/HealthDisplay"]
+margin_left = 20.0
+margin_right = 36.0
+margin_bottom = 16.0
+rect_min_size = Vector2( 16, 16 )
+
+[node name="HeartFull" type="TextureRect" parent="CanvasLayer/HealthDisplay/HeartDisplay2"]
+margin_right = 16.0
+margin_bottom = 16.0
+texture = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HeartEmpty" type="TextureRect" parent="CanvasLayer/HealthDisplay/HeartDisplay2"]
+margin_right = 16.0
+margin_bottom = 16.0
+texture = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HeartDisplay3" type="Control" parent="CanvasLayer/HealthDisplay"]
+margin_left = 40.0
+margin_right = 56.0
+margin_bottom = 16.0
+rect_min_size = Vector2( 16, 16 )
+
+[node name="HeartFull" type="TextureRect" parent="CanvasLayer/HealthDisplay/HeartDisplay3"]
+margin_right = 16.0
+margin_bottom = 16.0
+texture = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HeartEmpty" type="TextureRect" parent="CanvasLayer/HealthDisplay/HeartDisplay3"]
+margin_right = 16.0
+margin_bottom = 16.0
+texture = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HeartDisplay4" type="Control" parent="CanvasLayer/HealthDisplay"]
+margin_left = 60.0
+margin_right = 76.0
+margin_bottom = 16.0
+rect_min_size = Vector2( 16, 16 )
+
+[node name="HeartFull" type="TextureRect" parent="CanvasLayer/HealthDisplay/HeartDisplay4"]
+margin_right = 16.0
+margin_bottom = 16.0
+texture = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HeartEmpty" type="TextureRect" parent="CanvasLayer/HealthDisplay/HeartDisplay4"]
+margin_right = 16.0
+margin_bottom = 16.0
+texture = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HeartDisplay5" type="Control" parent="CanvasLayer/HealthDisplay"]
+margin_left = 80.0
+margin_right = 96.0
+margin_bottom = 16.0
+rect_min_size = Vector2( 16, 16 )
+
+[node name="HeartFull" type="TextureRect" parent="CanvasLayer/HealthDisplay/HeartDisplay5"]
+margin_right = 16.0
+margin_bottom = 16.0
+texture = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HeartEmpty" type="TextureRect" parent="CanvasLayer/HealthDisplay/HeartDisplay5"]
+margin_right = 16.0
+margin_bottom = 16.0
+texture = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HeartDisplay6" type="Control" parent="CanvasLayer/HealthDisplay"]
+margin_left = 100.0
+margin_right = 116.0
+margin_bottom = 16.0
+rect_min_size = Vector2( 16, 16 )
+
+[node name="HeartFull" type="TextureRect" parent="CanvasLayer/HealthDisplay/HeartDisplay6"]
+margin_right = 16.0
+margin_bottom = 16.0
+texture = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HeartEmpty" type="TextureRect" parent="CanvasLayer/HealthDisplay/HeartDisplay6"]
+margin_right = 16.0
+margin_bottom = 16.0
+texture = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HeartDisplay7" type="Control" parent="CanvasLayer/HealthDisplay"]
+margin_left = 120.0
+margin_right = 136.0
+margin_bottom = 16.0
+rect_min_size = Vector2( 16, 16 )
+
+[node name="HeartFull" type="TextureRect" parent="CanvasLayer/HealthDisplay/HeartDisplay7"]
+margin_right = 16.0
+margin_bottom = 16.0
+texture = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HeartEmpty" type="TextureRect" parent="CanvasLayer/HealthDisplay/HeartDisplay7"]
+margin_right = 16.0
+margin_bottom = 16.0
+texture = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HeartDisplay8" type="Control" parent="CanvasLayer/HealthDisplay"]
+margin_left = 140.0
+margin_right = 156.0
+margin_bottom = 16.0
+rect_min_size = Vector2( 16, 16 )
+
+[node name="HeartFull" type="TextureRect" parent="CanvasLayer/HealthDisplay/HeartDisplay8"]
+margin_right = 16.0
+margin_bottom = 16.0
+texture = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HeartEmpty" type="TextureRect" parent="CanvasLayer/HealthDisplay/HeartDisplay8"]
+margin_right = 16.0
+margin_bottom = 16.0
+texture = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HeartDisplay9" type="Control" parent="CanvasLayer/HealthDisplay"]
+margin_left = 160.0
+margin_right = 176.0
+margin_bottom = 16.0
+rect_min_size = Vector2( 16, 16 )
+
+[node name="HeartFull" type="TextureRect" parent="CanvasLayer/HealthDisplay/HeartDisplay9"]
+margin_right = 16.0
+margin_bottom = 16.0
+texture = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HeartEmpty" type="TextureRect" parent="CanvasLayer/HealthDisplay/HeartDisplay9"]
+margin_right = 16.0
+margin_bottom = 16.0
+texture = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HeartDisplay10" type="Control" parent="CanvasLayer/HealthDisplay"]
+margin_left = 180.0
+margin_right = 196.0
+margin_bottom = 16.0
+rect_min_size = Vector2( 16, 16 )
+
+[node name="HeartFull" type="TextureRect" parent="CanvasLayer/HealthDisplay/HeartDisplay10"]
+margin_right = 16.0
+margin_bottom = 16.0
+texture = ExtResource( 3 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HeartEmpty" type="TextureRect" parent="CanvasLayer/HealthDisplay/HeartDisplay10"]
+margin_right = 16.0
+margin_bottom = 16.0
+texture = ExtResource( 4 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="DeathMessage" type="Label" parent="CanvasLayer"]
+visible = false
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -135.0
+margin_top = -11.5
+margin_right = 135.0
+margin_bottom = 11.5
+custom_fonts/font = ExtResource( 6 )
+text = "You Died! Press 'R' to restart"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="InvincibilityTimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+autoplay = "idle"
+anims/idle = SubResource( 2 )
+anims/invincible = SubResource( 3 )
+
+[node name="PickupsDetector" type="Area2D" parent="."]
+collision_layer = 0
+collision_mask = 8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PickupsDetector"]
+shape = SubResource( 4 )
+
+[node name="JustKilledSomethingTimer" type="Timer" parent="."]
+wait_time = 0.5
+one_shot = true
 [connection signal="timeout" from="BulletCanCollideWithPlayerTimer" to="." method="bullet_can_collide_with_player"]
 [connection signal="timeout" from="DeactivateRopeTimer" to="." method="deactivate_rope"]
 [connection signal="timeout" from="RopeKillAnimTimer" to="." method="toggle_rope_graphics"]
+[connection signal="timeout" from="JustKilledSomethingTimer" to="." method="set_just_killed_something_false"]

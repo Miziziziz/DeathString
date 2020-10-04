@@ -1,5 +1,15 @@
 extends KinematicBody2D
 
+onready var anim_player = $AnimationPlayer
+
+const MAX_POSSIBLE_HEALTH = 10
+export var max_health = 2
+var cur_health = 2
+signal health_updated
+signal died
+var dead = false
+var invincible = false
+
 export var max_speed = 400
 export var move_accel = 80
 var drag = 0.0
@@ -11,8 +21,8 @@ var string_bullet : StringBullet
 var shoot_released = false
 var rope_active = false
 
-const MAX_ROPE_LENGTH = 2000
-const DIST_BETWEEN_ROPE_NODES = 10
+const MAX_ROPE_LENGTH = 500
+const DIST_BETWEEN_ROPE_NODES = 5
 var rope_obj = preload("res://projectiles/RopeNode.tscn")
 var rope_nodes = []
 var cur_active_rope_node_ind = -1
@@ -22,13 +32,35 @@ export var rope_kill_color : Color
 export var max_rope_width = 4.0
 export var min_rope_width = 1.0
 export var rope_kill_width = 7.0
+export var extra_rope_kill_width = 4.0
+export var extra_lightning_jitter_variance = 7.0
+export var max_lightning_jitter_variance = 7.0
 var use_rope_kill_graphics = false
 
 onready var bullet_can_collide_with_player_timer = $BulletCanCollideWithPlayerTimer
 onready var deactivate_rope_timer = $DeactivateRopeTimer
 onready var rope_kill_anim_timer = $RopeKillAnimTimer
 
+var cursor_open_img = preload("res://sprites/crosshair_open.png")
+var cursor_closed_img = preload("res://sprites/crosshair_closed.png")
+
+export var extra_screen_shake_amnt = 3.0
+export var max_screen_shake_amnt = 1.0
+var just_killed_something = false
+
 func _ready():
+	connect("health_updated", $CanvasLayer/HealthDisplay, "update_health")
+	if LevelManager.player_cur_health > 0:
+		cur_health = LevelManager.player_cur_health
+	if LevelManager.player_max_health > 0:
+		max_health = LevelManager.player_max_health
+	emit_health_updated()
+	
+	$PickupsDetector.connect("area_entered", self, "pickup_item")
+	
+	$InvincibilityTimer.connect("timeout", self, "disable_invincibility")
+	
+	set_cursor_open()
 	drag = float(move_accel) / max_speed
 	string_bullet = string_bullet_obj.instance()
 	get_tree().get_root().call_deferred("add_child", string_bullet)
@@ -51,6 +83,18 @@ func _process(delta):
 		get_tree().call_group("instanced", "queue_free")
 		get_tree().reload_current_scene()
 	
+	if dead:
+		return
+	
+	if use_rope_kill_graphics: # screen shake
+		var screen_shake_amnt = max_screen_shake_amnt
+		if just_killed_something:
+			screen_shake_amnt += extra_screen_shake_amnt
+		$Camera2D.offset = Vector2(rand_range(-screen_shake_amnt, screen_shake_amnt), rand_range(-screen_shake_amnt, screen_shake_amnt))
+	else:
+		$Camera2D.offset = Vector2.ZERO
+	
+	
 	if Input.is_action_just_pressed("shoot") and !string_bullet.active:
 		if rope_active:
 			deactivate_rope_timer.stop()
@@ -61,6 +105,7 @@ func _process(delta):
 		shoot_released = false
 		var aim_dir = (get_global_mouse_position() - global_position).normalized()
 		string_bullet.shoot(global_position, aim_dir)
+		set_cursor_closed()
 	
 	if Input.is_action_pressed("shoot") and shoot_released and string_bullet.active:
 		string_bullet.shoot(string_bullet.global_position, (global_position - string_bullet.global_position).normalized())
@@ -70,6 +115,9 @@ func _process(delta):
 			shoot_released = true
 	
 func _physics_process(_delta):
+	if dead:
+		return
+	
 	var move_vec = Vector2()
 
 	if Input.is_action_pressed("move_up"):
@@ -186,35 +234,101 @@ func _draw():
 	var rope_width = rope_kill_width
 	if use_rope_kill_graphics:
 		rope_color = rope_kill_color
+		if just_killed_something:
+			rope_width += extra_rope_kill_width
 	else:
 		var t = cur_active_rope_node_ind / float(rope_nodes.size())
 		rope_width = lerp(max_rope_width, min_rope_width, t)
+	
+	
 	var ind = 0
 	var last_rope_node = string_bullet
+	var last_rope_node_pos = Vector2()
 	for rope_node in rope_nodes:
 		if ind > cur_active_rope_node_ind:
 			break
-		draw_line(to_local(last_rope_node.global_position), to_local(rope_node.global_position), rope_color, rope_width)
+		if use_rope_kill_graphics and ind != 0:
+			var cur_max_jitter_amnt = max_lightning_jitter_variance
+			if just_killed_something:
+				cur_max_jitter_amnt += extra_lightning_jitter_variance
+			var jitter_amnt = rand_range(-cur_max_jitter_amnt, cur_max_jitter_amnt)
+			var vec_to_right = last_rope_node_pos.direction_to(rope_node.global_position).rotated(deg2rad(90))
+			var next_rope_node_pos = rope_node.global_position + vec_to_right * jitter_amnt
+			draw_line(to_local(last_rope_node_pos), to_local(next_rope_node_pos), rope_color, rope_width)
+			last_rope_node_pos = next_rope_node_pos
+		else:
+			draw_line(to_local(last_rope_node.global_position), to_local(rope_node.global_position), rope_color, rope_width)
+			last_rope_node_pos = rope_node.global_position
 		last_rope_node = rope_node
+		
 		ind += 1
 	draw_line(to_local(last_rope_node.global_position), to_local(global_position), rope_color, rope_width)
-	
 
 func kill_all_touching_rope():
+	var killed_something = false
 	for rope_node in rope_nodes:
-		rope_node.kill_nearby()
-#		for body in rope_node.get_colliding_bodies():
-#			if body.has_method("kill"):
-#				body.kill()
+		if rope_node.kill_nearby():
+				killed_something = true
+	if killed_something:
+		just_killed_something = true
+		$JustKilledSomethingTimer.start()
 
 func bullet_returned():
 	bullet_can_collide_with_player_timer.stop()
 	string_bullet.remove_collision_exception_with(self)
 	deactivate_rope_timer.start()
 	rope_kill_anim_timer.start()
+	set_cursor_open()
 
 func bullet_can_collide_with_player():
 	string_bullet.remove_collision_exception_with(self)
 
 func toggle_rope_graphics():
 	use_rope_kill_graphics = !use_rope_kill_graphics
+
+func set_cursor_open():
+	Input.set_custom_mouse_cursor(cursor_open_img, Input.CURSOR_ARROW, Vector2.ONE * 16)
+
+func set_cursor_closed():
+	Input.set_custom_mouse_cursor(cursor_closed_img, Input.CURSOR_ARROW, Vector2.ONE * 16)
+
+func disable_invincibility():
+	invincible = false
+	anim_player.play("idle")
+
+func hurt():
+	if invincible:
+		return
+	if dead:
+		return
+	invincible = true
+	$InvincibilityTimer.start()
+	anim_player.play("invincible")
+	cur_health -= 1
+	emit_health_updated()
+	if cur_health <= 0:
+		dead = true
+		emit_signal("died")
+		$CanvasLayer/DeathMessage.show()
+
+func pickup_item(item):
+	if item is HealthPickup and cur_health < max_health:
+		if item.pickup():
+			cur_health += 1
+			emit_health_updated()
+	if item is MaxHealthIncreasePickup:
+		if max_health < MAX_POSSIBLE_HEALTH:
+			if item.pickup():
+				max_health += 1
+				cur_health += 1
+				emit_health_updated()
+		elif cur_health < max_health:
+			if item.pickup():
+				cur_health += 1
+				emit_health_updated()
+
+func set_just_killed_something_false():
+	just_killed_something = false
+
+func emit_health_updated():
+	emit_signal("health_updated", cur_health, max_health)

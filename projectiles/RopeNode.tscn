@@ -4,10 +4,10 @@
 [ext_resource path="res://projectiles/RopeNode.gd" type="Script" id=2]
 
 [sub_resource type="CircleShape2D" id=1]
-radius = 4.0
+radius = 2.0
 
 [sub_resource type="CircleShape2D" id=2]
-radius = 14.5
+radius = 7.0
 
 [node name="RopeNode" type="RigidBody2D" groups=[
 "instanced",

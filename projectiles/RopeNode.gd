@@ -12,9 +12,12 @@ func activate():
 	$CollisionShape2D.disabled = false
 
 func kill_nearby():
+	var killed_something = false
 	for body in $Area.get_overlapping_bodies():
 		if body.has_method("kill"):
-			body.kill()
+			if body.kill():
+				killed_something = true
+	return killed_something
 
 func push(offset: Vector2):
 	global_position += offset

@@ -1,45 +1,72 @@
-extends KinematicBody2D
+extends Enemy
 
+enum STATES {IDLE, CHARGE, READY_CHARGE, WALK}
+var cur_state = STATES.IDLE
 
-var player : KinematicBody2D
-var charge_speed = 400
-var charging = false
+export var walk_speed = 40
+export var charge_speed = 200
 var charge_dir : Vector2
 
-onready var charge_timer = $ChargeTimer
-onready var rest_timer = $RestTimer
+var repel_amount = 0.5
+export var time_to_spend_charging = 1.0
+export var time_to_spend_readying_charge = 2.0
+var time_in_charge_state = 0.0
+var time_in_ready_charge_state = 0.0
 
-func _ready():
-	charge_timer.start()
-	player = get_tree().get_nodes_in_group("player")[0]
-
-func _physics_process(_delta):
-	if !charging:
+func _physics_process(delta):
+	if cur_state == STATES.IDLE:
+		if has_los_target_pos(player.global_position):
+			set_state_ready_charge()
 		return
+	
+	match cur_state:
+		STATES.READY_CHARGE:
+			process_state_ready_charge(delta)
+		STATES.CHARGE:
+			process_state_charge(delta)
+		STATES.WALK:
+			process_state_walk(delta)
+
+func set_state_ready_charge():
+	cur_state = STATES.READY_CHARGE
+	anim_player.play("ready_charge")
+	time_in_ready_charge_state = 0.0
+
+func set_state_charge():
+	cur_state = STATES.CHARGE
+	charge_dir = global_position.direction_to(player.global_position)
+	anim_player.play("spin")
+	time_in_charge_state = 0.0
+
+func set_state_walk():
+	cur_state = STATES.WALK
+
+func process_state_charge(delta):
+	time_in_charge_state += delta
+	if time_in_charge_state >= time_to_spend_charging:
+		set_state_walk()
 	move_and_slide(charge_dir * charge_speed, Vector2(), false, 4, 0.785398, false)
 	for i in range(get_slide_count()):
 		var coll : KinematicCollision2D = get_slide_collision(i)
 		if coll.collider is RopeNode:
 			coll.collider.push(global_position.direction_to(coll.position) * 4.0)
-		# TODO hurt player
 
-var last_tick_hit = 0
-var times_hit_this_frame = 0
-func kill():
-	var cur_tick = OS.get_ticks_msec()
-	if last_tick_hit != cur_tick:
-		last_tick_hit = cur_tick
-		times_hit_this_frame = 0
-	times_hit_this_frame += 1
-	if times_hit_this_frame > 5:
-		queue_free()
-		$GibsSpawner.spawn_gibs()
+func process_state_ready_charge(delta):
+	time_in_ready_charge_state += delta
+	if time_in_ready_charge_state >= time_to_spend_readying_charge:
+		set_state_charge()
 
-func stop_charge():
-	charging = false
-	rest_timer.start()
+func process_state_walk(delta):
+	if has_los_target_pos(player.global_position):
+		set_state_ready_charge()
+		return
+	var move_vec = get_move_vec_to_point(player.global_position)
+	var repel_vec = get_repulsion_vector()
+	var updated_move_vec = move_vec * (1.0 - repel_amount) + repel_vec * repel_amount
+	move_and_slide(updated_move_vec * walk_speed, Vector2(), false, 4, 0.785398, false)
+	for i in range(get_slide_count()):
+		var coll : KinematicCollision2D = get_slide_collision(i)
+		if coll.collider is RopeNode:
+			coll.collider.push(global_position.direction_to(coll.position) * 4.0)
+	play_move_anim(move_vec)
 
-func start_charge():
-	charge_dir = global_position.direction_to(player.global_position)
-	charging = true
-	charge_timer.start()
