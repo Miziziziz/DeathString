@@ -9,10 +9,20 @@
 config_version=4
 
 _global_script_classes=[ {
+"base": "StaticBody2D",
+"class": "Boss",
+"language": "GDScript",
+"path": "res://characters/Boss.gd"
+}, {
 "base": "KinematicBody2D",
 "class": "Enemy",
 "language": "GDScript",
 "path": "res://characters/Enemy.gd"
+}, {
+"base": "Position2D",
+"class": "EnemySpawner",
+"language": "GDScript",
+"path": "res://environment/EnemySpawner.gd"
 }, {
 "base": "Area2D",
 "class": "HealthPickup",
@@ -35,7 +45,9 @@ _global_script_classes=[ {
 "path": "res://projectiles/StringBullet.gd"
 } ]
 _global_script_class_icons={
+"Boss": "",
 "Enemy": "",
+"EnemySpawner": "",
 "HealthPickup": "",
 "MaxHealthIncreasePickup": "",
 "RopeNode": "",
@@ -45,7 +57,7 @@ _global_script_class_icons={
 [application]
 
 config/name="DeathString"
-run/main_scene="res://levels/Tutorial.tscn"
+run/main_scene="res://levels/Intro.tscn"
 config/icon="res://icon.png"
 
 [autoload]
@@ -54,7 +66,9 @@ LevelManager="*res://singletons/LevelManager.tscn"
 
 [display]
 
-window/size/width=1040
+window/size/width=512
+window/size/height=300
+window/size/fullscreen=true
 mouse_cursor/custom_image="res://sprites/crosshair_open.png"
 mouse_cursor/custom_image_hotspot=Vector2( 16, 16 )
 window/stretch/mode="viewport"
@@ -120,6 +134,16 @@ shoot={
 "events": [ Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"button_mask":0,"position":Vector2( 0, 0 ),"global_position":Vector2( 0, 0 ),"factor":1.0,"button_index":1,"pressed":false,"doubleclick":false,"script":null)
  ]
 }
+continue={
+"deadzone": 0.5,
+"events": [ Object(InputEventKey,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"pressed":false,"scancode":16777221,"unicode":0,"echo":false,"script":null)
+ ]
+}
+instant_retract={
+"deadzone": 0.5,
+"events": [ Object(InputEventMouseButton,"resource_local_to_scene":false,"resource_name":"","device":0,"alt":false,"shift":false,"control":false,"meta":false,"command":false,"button_mask":0,"position":Vector2( 0, 0 ),"global_position":Vector2( 0, 0 ),"factor":1.0,"button_index":2,"pressed":false,"doubleclick":false,"script":null)
+ ]
+}
 
 [layer_names]
 
@@ -127,6 +151,8 @@ shoot={
 2d_physics/layer_2="enemies"
 2d_physics/layer_3="player"
 2d_physics/layer_4="pickups"
+2d_physics/layer_5="boss"
+2d_physics/layer_6="large_energy_bullets"
 
 [rendering]
 

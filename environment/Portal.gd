@@ -10,7 +10,7 @@ func _ready():
 	var enemies_in_scene = get_tree().get_nodes_in_group("enemies")
 	num_of_enemies_in_scene = enemies_in_scene.size()
 	for enemy in enemies_in_scene:
-		if enemy is Enemy:
+		if enemy is Enemy or enemy is Boss:
 			enemy.connect("died", self, "enemy_killed")
 
 func open_portal():

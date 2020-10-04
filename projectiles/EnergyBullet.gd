@@ -1,7 +1,7 @@
 extends KinematicBody2D
 
 
-var move_speed = 200
+var move_speed = 100
 var move_vec : Vector2
 
 func _physics_process(delta):
@@ -9,5 +9,7 @@ func _physics_process(delta):
 	if coll:
 		if coll.collider.has_method("hurt"):
 			coll.collider.hurt()
-		# spawn hit effect
-		queue_free()
+		destroy()
+
+func destroy():
+	queue_free()

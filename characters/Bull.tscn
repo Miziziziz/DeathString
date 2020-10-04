@@ -7,7 +7,7 @@
 [sub_resource type="CircleShape2D" id=1]
 radius = 6.0
 
-[sub_resource type="Animation" id=3]
+[sub_resource type="Animation" id=2]
 resource_name = "move_down"
 length = 0.8
 loop = true
@@ -24,7 +24,7 @@ tracks/0/keys = {
 "values": [ 0, 1, 2, 3, 4, 5, 6, 7 ]
 }
 
-[sub_resource type="Animation" id=4]
+[sub_resource type="Animation" id=3]
 resource_name = "move_left"
 length = 0.8
 loop = true
@@ -41,7 +41,7 @@ tracks/0/keys = {
 "values": [ 24, 25, 26, 27, 28, 29, 30, 31 ]
 }
 
-[sub_resource type="Animation" id=5]
+[sub_resource type="Animation" id=4]
 resource_name = "move_right"
 length = 0.8
 loop = true
@@ -58,7 +58,7 @@ tracks/0/keys = {
 "values": [ 16, 17, 18, 19, 20, 21, 22, 23 ]
 }
 
-[sub_resource type="Animation" id=6]
+[sub_resource type="Animation" id=5]
 resource_name = "move_up"
 length = 0.8
 loop = true
@@ -75,8 +75,7 @@ tracks/0/keys = {
 "values": [ 8, 9, 10, 11, 12, 13, 14, 15 ]
 }
 
-[sub_resource type="Animation" id=2]
-resource_name = "ready_charge"
+[sub_resource type="Animation" id=6]
 loop = true
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:frame")
@@ -112,7 +111,7 @@ tracks/0/keys = {
 radius = 10.1295
 
 [sub_resource type="CircleShape2D" id=9]
-radius = 7.85783
+radius = 6.2232
 
 [node name="Bull" type="KinematicBody2D" groups=[
 "enemies",
@@ -136,11 +135,11 @@ frame = 32
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Graphics"]
 autoplay = "ready_charge"
-anims/move_down = SubResource( 3 )
-anims/move_left = SubResource( 4 )
-anims/move_right = SubResource( 5 )
-anims/move_up = SubResource( 6 )
-anims/ready_charge = SubResource( 2 )
+anims/move_down = SubResource( 2 )
+anims/move_left = SubResource( 3 )
+anims/move_right = SubResource( 4 )
+anims/move_up = SubResource( 5 )
+anims/ready_charge = SubResource( 6 )
 anims/spin = SubResource( 7 )
 
 [node name="AllyDetector" type="Area2D" parent="."]

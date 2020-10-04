@@ -10,6 +10,7 @@ _data = [ Vector2( 0, 0 ), 0.0, 4.14375, 0, 0, Vector2( 0.502674, 1 ), 0.0, 0.0,
 radius = 3.74541
 
 [node name="Gib" type="KinematicBody2D" groups=[
+"gibs",
 "instanced",
 ]]
 collision_layer = 0

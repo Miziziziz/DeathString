@@ -1,0 +1,147 @@
+[gd_scene load_steps=9 format=2]
+
+[ext_resource path="res://environment/TileMap.tscn" type="PackedScene" id=1]
+[ext_resource path="res://characters/Player.tscn" type="PackedScene" id=2]
+[ext_resource path="res://characters/Boss.tscn" type="PackedScene" id=3]
+[ext_resource path="res://environment/EnemySpawner.tscn" type="PackedScene" id=4]
+[ext_resource path="res://sprites/tiled_background.png" type="Texture" id=5]
+[ext_resource path="res://pickups/HealthPickup.tscn" type="PackedScene" id=6]
+[ext_resource path="res://pickups/MaxHealthIncreasePickup.tscn" type="PackedScene" id=7]
+[ext_resource path="res://environment/Portal.tscn" type="PackedScene" id=8]
+
+[node name="World" type="Node2D"]
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2( 0.6, 0.6 )
+motion_mirroring = Vector2( 540, 333 )
+
+[node name="tiled_background" type="Sprite" parent="ParallaxBackground/ParallaxLayer"]
+texture = ExtResource( 5 )
+centered = false
+
+[node name="tiled_background2" type="Sprite" parent="ParallaxBackground/ParallaxLayer"]
+position = Vector2( 180, 0 )
+texture = ExtResource( 5 )
+centered = false
+
+[node name="tiled_background3" type="Sprite" parent="ParallaxBackground/ParallaxLayer"]
+position = Vector2( 0, 111 )
+texture = ExtResource( 5 )
+centered = false
+
+[node name="tiled_background4" type="Sprite" parent="ParallaxBackground/ParallaxLayer"]
+position = Vector2( 180, 111 )
+texture = ExtResource( 5 )
+centered = false
+
+[node name="tiled_background5" type="Sprite" parent="ParallaxBackground/ParallaxLayer"]
+position = Vector2( 360, 111 )
+texture = ExtResource( 5 )
+centered = false
+
+[node name="tiled_background7" type="Sprite" parent="ParallaxBackground/ParallaxLayer"]
+position = Vector2( 0, 222 )
+texture = ExtResource( 5 )
+centered = false
+
+[node name="tiled_background8" type="Sprite" parent="ParallaxBackground/ParallaxLayer"]
+position = Vector2( 180, 222 )
+texture = ExtResource( 5 )
+centered = false
+
+[node name="tiled_background9" type="Sprite" parent="ParallaxBackground/ParallaxLayer"]
+position = Vector2( 360, 222 )
+texture = ExtResource( 5 )
+centered = false
+
+[node name="tiled_background6" type="Sprite" parent="ParallaxBackground/ParallaxLayer"]
+position = Vector2( 360, 0 )
+texture = ExtResource( 5 )
+centered = false
+
+[node name="Navigation2D" type="Navigation2D" parent="." groups=[
+"navigation",
+]]
+
+[node name="TileMap" parent="Navigation2D" instance=ExtResource( 1 )]
+tile_data = PoolIntArray( 196596, 1, 196609, 196597, 1, 3, 196598, 1, 3, 196599, 1, 3, 196600, 1, 3, 196601, 1, 3, 196602, 1, 3, 196603, 1, 3, 196604, 1, 3, 196605, 1, 3, 196606, 1, 3, 196607, 1, 3, 131072, 1, 3, 131073, 1, 3, 131074, 1, 3, 131075, 1, 3, 131076, 1, 3, 131077, 1, 3, 131078, 1, 3, 131079, 1, 3, 131080, 1, 3, 131081, 1, 3, 131082, 1, 3, 131083, 1, 3, 131084, 1, 3, 131085, 1, 3, 131086, 1, 3, 131087, 1, 3, 131088, 1, 3, 131089, 1, 3, 131090, 1, 3, 131091, 1, 3, 131092, 1, 3, 131093, 1, 3, 131094, 1, 3, 131095, 1, 3, 131096, 1, 3, 131097, 1, 3, 131098, 1, 3, 131099, 1, 0, 262132, 1, 1, 262133, 1, 65539, 262134, 1, 131073, 262135, 1, 131073, 262136, 1, 131073, 262137, 1, 131073, 262138, 1, 131073, 262139, 1, 131073, 262140, 1, 131073, 262141, 1, 131073, 262142, 1, 131073, 262143, 1, 131073, 196608, 1, 131073, 196609, 1, 131073, 196610, 1, 131073, 196611, 1, 131073, 196612, 1, 131073, 196613, 1, 131073, 196614, 1, 131073, 196615, 1, 131073, 196616, 1, 131073, 196617, 1, 131073, 196618, 1, 131073, 196619, 1, 131073, 196620, 1, 131073, 196621, 1, 131073, 196622, 1, 131073, 196623, 1, 131073, 196624, 1, 131073, 196625, 1, 131073, 196626, 1, 131073, 196627, 1, 131073, 196628, 1, 131073, 196629, 1, 131073, 196630, 1, 131073, 196631, 1, 131073, 196632, 1, 131073, 196633, 1, 131073, 196634, 1, 131074, 196635, 1, 131075, 327668, 1, 1, 327669, 1, 131075, 262170, 1, 1, 262171, 1, 131075, 393204, 1, 1, 393205, 1, 131075, 327706, 1, 1, 327707, 1, 131075, 458740, 1, 1, 458741, 1, 131075, 393242, 1, 1, 393243, 1, 131075, 524276, 1, 1, 524277, 1, 131075, 458778, 1, 1, 458779, 1, 131075, 589812, 1, 1, 589813, 1, 131075, 524314, 1, 1, 524315, 1, 131075, 655348, 1, 1, 655349, 1, 131075, 589850, 1, 1, 589851, 1, 131075, 720884, 1, 1, 720885, 1, 131075, 655386, 1, 1, 655387, 1, 131075, 786420, 1, 1, 786421, 1, 131075, 720922, 1, 1, 720923, 1, 131075, 851956, 1, 1, 851957, 1, 131075, 786458, 1, 1, 786459, 1, 131075, 917492, 1, 1, 917493, 1, 131075, 851994, 1, 1, 851995, 1, 131075, 983028, 1, 1, 983029, 1, 131075, 917530, 1, 1, 917531, 1, 131075, 1048564, 1, 1, 1048565, 1, 131075, 983066, 1, 1, 983067, 1, 131075, 1114100, 1, 1, 1114101, 1, 131075, 1048602, 1, 131072, 1048603, 1, 65536, 1048604, 1, 0, 1179636, 1, 1, 1179637, 1, 131075, 1114139, 1, 1, 1114140, 1, 131075, 1245172, 1, 1, 1245173, 1, 131075, 1179674, 1, 196609, 1179675, 1, 196610, 1179676, 1, 196611, 1310708, 1, 1, 1310709, 1, 131075, 1245210, 1, 1, 1245211, 1, 131075, 1376244, 1, 1, 1376245, 1, 131075, 1310746, 1, 1, 1310747, 1, 131075, 1441780, 1, 1, 1441781, 1, 131075, 1376282, 1, 1, 1376283, 1, 131075, 1507316, 1, 1, 1507317, 1, 131075, 1441818, 1, 1, 1441819, 1, 131075, 1572852, 1, 1, 1572853, 1, 131075, 1507354, 1, 1, 1507355, 1, 131075, 1638388, 1, 1, 1638389, 1, 131075, 1572890, 1, 1, 1572891, 1, 131075, 1703924, 1, 1, 1703925, 1, 131075, 1638426, 1, 1, 1638427, 1, 131075, 1769460, 1, 1, 1769461, 1, 131075, 1703962, 1, 1, 1703963, 1, 131075, 1834996, 1, 1, 1834997, 1, 131075, 1769498, 1, 1, 1769499, 1, 131075, 1900532, 1, 1, 1900533, 1, 131075, 1835034, 1, 1, 1835035, 1, 131075, 1966068, 1, 1, 1966069, 1, 131075, 1900570, 1, 1, 1900571, 1, 131075, 2031604, 1, 1, 2031605, 1, 131075, 1966106, 1, 1, 1966107, 1, 131075, 2097140, 1, 1, 2097141, 1, 131075, 2031642, 1, 1, 2031643, 1, 131075, 2162676, 1, 1, 2162677, 1, 2, 2162678, 1, 3, 2162679, 1, 3, 2162680, 1, 3, 2162681, 1, 3, 2162682, 1, 3, 2162683, 1, 3, 2162684, 1, 3, 2162685, 1, 3, 2162686, 1, 3, 2162687, 1, 3, 2097152, 1, 3, 2097153, 1, 3, 2097154, 1, 3, 2097155, 1, 3, 2097156, 1, 3, 2097157, 1, 3, 2097158, 1, 3, 2097159, 1, 3, 2097160, 1, 3, 2097161, 1, 3, 2097162, 1, 3, 2097163, 1, 3, 2097164, 1, 3, 2097165, 1, 3, 2097166, 1, 3, 2097167, 1, 3, 2097168, 1, 3, 2097169, 1, 3, 2097170, 1, 3, 2097171, 1, 3, 2097172, 1, 3, 2097173, 1, 3, 2097174, 1, 3, 2097175, 1, 3, 2097176, 1, 3, 2097177, 1, 3, 2097178, 1, 65537, 2097179, 1, 131075, 2228212, 1, 131072, 2228213, 1, 131073, 2228214, 1, 131073, 2228215, 1, 131073, 2228216, 1, 131073, 2228217, 1, 131073, 2228218, 1, 131073, 2228219, 1, 131073, 2228220, 1, 131073, 2228221, 1, 131073, 2228222, 1, 131073, 2228223, 1, 131073, 2162688, 1, 131073, 2162689, 1, 131073, 2162690, 1, 131073, 2162691, 1, 131073, 2162692, 1, 131073, 2162693, 1, 131073, 2162694, 1, 131073, 2162695, 1, 131073, 2162696, 1, 131073, 2162697, 1, 131073, 2162698, 1, 131073, 2162699, 1, 131073, 2162700, 1, 131073, 2162701, 1, 131073, 2162702, 1, 131073, 2162703, 1, 131073, 2162704, 1, 131073, 2162705, 1, 131073, 2162706, 1, 131073, 2162707, 1, 131073, 2162708, 1, 131073, 2162709, 1, 131073, 2162710, 1, 131073, 2162711, 1, 131073, 2162712, 1, 131073, 2162713, 1, 131073, 2162714, 1, 131073, 2162715, 1, 196611 )
+
+[node name="MapTopLeft" parent="Navigation2D/TileMap" index="0"]
+position = Vector2( -200, 24 )
+
+[node name="MapBotRight" parent="Navigation2D/TileMap" index="1"]
+position = Vector2( 452, 548 )
+
+[node name="Player" parent="." instance=ExtResource( 2 )]
+position = Vector2( -72, 288 )
+
+[node name="HealthPickup" parent="." instance=ExtResource( 6 )]
+position = Vector2( -144, 80 )
+
+[node name="HealthPickup2" parent="." instance=ExtResource( 6 )]
+position = Vector2( 32, 80 )
+
+[node name="HealthPickup3" parent="." instance=ExtResource( 6 )]
+position = Vector2( 224, 80 )
+
+[node name="HealthPickup4" parent="." instance=ExtResource( 6 )]
+position = Vector2( 400, 80 )
+
+[node name="HealthPickup5" parent="." instance=ExtResource( 6 )]
+position = Vector2( -144, 496 )
+
+[node name="HealthPickup6" parent="." instance=ExtResource( 6 )]
+position = Vector2( 32, 496 )
+
+[node name="HealthPickup7" parent="." instance=ExtResource( 6 )]
+position = Vector2( 224, 496 )
+
+[node name="HealthPickup8" parent="." instance=ExtResource( 6 )]
+position = Vector2( 400, 496 )
+
+[node name="HealthPickup9" parent="." instance=ExtResource( 6 )]
+position = Vector2( 400, 360 )
+
+[node name="HealthPickup10" parent="." instance=ExtResource( 6 )]
+position = Vector2( 400, 216 )
+
+[node name="HealthPickup11" parent="." instance=ExtResource( 6 )]
+position = Vector2( -144, 360 )
+
+[node name="HealthPickup12" parent="." instance=ExtResource( 6 )]
+position = Vector2( -144, 216 )
+
+[node name="MaxHealthIncreasePickup" parent="." instance=ExtResource( 7 )]
+position = Vector2( 84, 288 )
+
+[node name="MaxHealthIncreasePickup3" parent="." instance=ExtResource( 7 )]
+position = Vector2( 128, 244 )
+
+[node name="MaxHealthIncreasePickup2" parent="." instance=ExtResource( 7 )]
+position = Vector2( 172, 288 )
+
+[node name="MaxHealthIncreasePickup4" parent="." instance=ExtResource( 7 )]
+position = Vector2( 128, 332 )
+
+[node name="Portal" parent="." instance=ExtResource( 8 )]
+position = Vector2( 424, 280 )
+
+[node name="Boss" parent="." instance=ExtResource( 3 )]
+position = Vector2( 128, 288 )
+
+[node name="EnemySpawner" parent="Boss" instance=ExtResource( 4 )]
+position = Vector2( -120, -128 )
+
+[node name="EnemySpawner2" parent="Boss" instance=ExtResource( 4 )]
+position = Vector2( 136, -128 )
+
+[node name="EnemySpawner3" parent="Boss" instance=ExtResource( 4 )]
+position = Vector2( 136, 160 )
+
+[node name="EnemySpawner4" parent="Boss" instance=ExtResource( 4 )]
+position = Vector2( -120, 160 )
+[connection signal="died" from="Boss" to="Portal" method="open_portal"]
+
+[editable path="Navigation2D/TileMap"]

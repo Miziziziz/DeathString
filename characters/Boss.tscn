@@ -1,0 +1,109 @@
+[gd_scene load_steps=11 format=2]
+
+[ext_resource path="res://characters/Boss.gd" type="Script" id=1]
+[ext_resource path="res://characters/BossHealthNode.tscn" type="PackedScene" id=2]
+[ext_resource path="res://circle.png" type="Texture" id=3]
+[ext_resource path="res://ui/KLEINTEN.ttf" type="DynamicFontData" id=4]
+[ext_resource path="res://characters/BossHealthDisplay.gd" type="Script" id=5]
+
+[sub_resource type="CircleShape2D" id=1]
+radius = 32.0
+
+[sub_resource type="CircleShape2D" id=2]
+radius = 32.9848
+
+[sub_resource type="StyleBoxFlat" id=3]
+bg_color = Color( 1, 0, 0, 1 )
+
+[sub_resource type="StyleBoxFlat" id=4]
+bg_color = Color( 0, 0, 0, 1 )
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+expand_margin_left = 2.0
+expand_margin_right = 2.0
+expand_margin_top = 2.0
+expand_margin_bottom = 2.0
+
+[sub_resource type="DynamicFont" id=5]
+size = 10
+font_data = ExtResource( 4 )
+
+[node name="Boss" type="StaticBody2D" groups=[
+"enemies",
+]]
+collision_layer = 2147483666
+collision_mask = 0
+script = ExtResource( 1 )
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 1 )
+
+[node name="Sprite" type="Sprite" parent="."]
+self_modulate = Color( 0.964706, 0.0156863, 0.0156863, 1 )
+scale = Vector2( 2, 2 )
+texture = ExtResource( 3 )
+
+[node name="HealthNodes" type="Node2D" parent="."]
+
+[node name="BossHealthNode" parent="HealthNodes" instance=ExtResource( 2 )]
+position = Vector2( -64, 0 )
+
+[node name="BossHealthNode2" parent="HealthNodes" instance=ExtResource( 2 )]
+position = Vector2( -48, -48 )
+
+[node name="BossHealthNode3" parent="HealthNodes" instance=ExtResource( 2 )]
+position = Vector2( 0, -64 )
+
+[node name="BossHealthNode4" parent="HealthNodes" instance=ExtResource( 2 )]
+position = Vector2( 48, -48 )
+
+[node name="BossHealthNode5" parent="HealthNodes" instance=ExtResource( 2 )]
+position = Vector2( 64, 0 )
+
+[node name="BossHealthNode6" parent="HealthNodes" instance=ExtResource( 2 )]
+position = Vector2( 48, 48 )
+
+[node name="BossHealthNode7" parent="HealthNodes" instance=ExtResource( 2 )]
+position = Vector2( 0, 64 )
+
+[node name="BossHealthNode8" parent="HealthNodes" instance=ExtResource( 2 )]
+position = Vector2( -48, 48 )
+
+[node name="PlayerDetector" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerDetector"]
+shape = SubResource( 2 )
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="BossHealthDisplay" type="ProgressBar" parent="CanvasLayer"]
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+margin_left = -188.0
+margin_top = -20.0
+margin_right = 188.0
+margin_bottom = -6.0
+custom_styles/fg = SubResource( 3 )
+custom_styles/bg = SubResource( 4 )
+value = 50.0
+percent_visible = false
+script = ExtResource( 5 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="CanvasLayer/BossHealthDisplay"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -45.0
+margin_top = -6.5
+margin_right = 45.0
+margin_bottom = 6.5
+custom_fonts/font = SubResource( 5 )
+text = "Hell Maw"

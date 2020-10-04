@@ -73,6 +73,7 @@ position = Vector2( 464, 360 )
 
 [node name="Player" parent="." instance=ExtResource( 2 )]
 position = Vector2( 104, 160 )
+max_health = 3
 
 [node name="Bull" parent="." instance=ExtResource( 4 )]
 position = Vector2( 296, 248 )

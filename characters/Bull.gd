@@ -49,7 +49,7 @@ func process_state_charge(delta):
 	for i in range(get_slide_count()):
 		var coll : KinematicCollision2D = get_slide_collision(i)
 		if coll.collider is RopeNode:
-			coll.collider.push(global_position.direction_to(coll.position) * 4.0)
+			coll.collider.push(global_position.direction_to(coll.position) * 2.0)
 
 func process_state_ready_charge(delta):
 	time_in_ready_charge_state += delta

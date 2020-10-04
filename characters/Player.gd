@@ -3,8 +3,8 @@ extends KinematicBody2D
 onready var anim_player = $AnimationPlayer
 
 const MAX_POSSIBLE_HEALTH = 10
-export var max_health = 2
-var cur_health = 2
+export var max_health = 3
+var cur_health = 0
 signal health_updated
 signal died
 var dead = false
@@ -21,7 +21,7 @@ var string_bullet : StringBullet
 var shoot_released = false
 var rope_active = false
 
-const MAX_ROPE_LENGTH = 500
+const MAX_ROPE_LENGTH = 1000
 const DIST_BETWEEN_ROPE_NODES = 5
 var rope_obj = preload("res://projectiles/RopeNode.tscn")
 var rope_nodes = []
@@ -45,15 +45,20 @@ var cursor_open_img = preload("res://sprites/crosshair_open.png")
 var cursor_closed_img = preload("res://sprites/crosshair_closed.png")
 
 export var extra_screen_shake_amnt = 3.0
-export var max_screen_shake_amnt = 1.0
+export var max_screen_shake_amnt = 2.0
+var screen_shake_change_rate = 0.05
+var cur_screen_shake_time = 0.0
+var cur_screen_shake_offset : Vector2
 var just_killed_something = false
 
 func _ready():
 	connect("health_updated", $CanvasLayer/HealthDisplay, "update_health")
-	if LevelManager.player_cur_health > 0:
-		cur_health = LevelManager.player_cur_health
 	if LevelManager.player_max_health > 0:
 		max_health = LevelManager.player_max_health
+	if LevelManager.player_cur_health > 0:
+		cur_health = LevelManager.player_cur_health
+	else:
+		cur_health = max_health
 	emit_health_updated()
 	
 	$PickupsDetector.connect("area_entered", self, "pickup_item")
@@ -87,13 +92,23 @@ func _process(delta):
 		return
 	
 	if use_rope_kill_graphics: # screen shake
-		var screen_shake_amnt = max_screen_shake_amnt
-		if just_killed_something:
-			screen_shake_amnt += extra_screen_shake_amnt
-		$Camera2D.offset = Vector2(rand_range(-screen_shake_amnt, screen_shake_amnt), rand_range(-screen_shake_amnt, screen_shake_amnt))
+		cur_screen_shake_time += delta
+		if cur_screen_shake_time >= screen_shake_change_rate:
+			var screen_shake_amnt = max_screen_shake_amnt
+			if just_killed_something:
+				screen_shake_amnt += extra_screen_shake_amnt
+			cur_screen_shake_offset = Vector2(rand_range(-screen_shake_amnt, screen_shake_amnt), rand_range(-screen_shake_amnt, screen_shake_amnt))
+			if just_killed_something:
+				cur_screen_shake_time = screen_shake_change_rate
+			else:
+				cur_screen_shake_time = 0.0
+		$Camera2D.offset += lerp(Vector2.ZERO, cur_screen_shake_offset, cur_screen_shake_time / screen_shake_change_rate)
 	else:
 		$Camera2D.offset = Vector2.ZERO
 	
+	if Input.is_action_just_pressed("instant_retract"):
+		string_bullet.deactivate()
+		deactivate_rope()
 	
 	if Input.is_action_just_pressed("shoot") and !string_bullet.active:
 		if rope_active:
@@ -109,6 +124,9 @@ func _process(delta):
 	
 	if Input.is_action_pressed("shoot") and shoot_released and string_bullet.active:
 		string_bullet.shoot(string_bullet.global_position, (global_position - string_bullet.global_position).normalized())
+		string_bullet.return_button_held = true
+	else:
+		string_bullet.return_button_held = false
 	
 	if Input.is_action_just_released("shoot"):
 		if string_bullet.active:
@@ -141,8 +159,9 @@ func _physics_process(_delta):
 		update_rope()
 	elif rope_active:
 		string_bullet.global_position = global_position
-		tighten_rope()
+		tighten_rope(true, true)
 		tighten_rope(false)
+		spool_rope_evenly()
 		kill_all_touching_rope()
 	update()
 
@@ -192,7 +211,7 @@ func update_rope():
 		rope_nodes[cur_active_rope_node_ind].global_position = new_rope_node_pos
 		
 
-func tighten_rope(tighten_forward=true):
+func tighten_rope(tighten_forward=true, tighten_player=false):
 	var ind = 0
 	if tighten_forward:
 		var last_rope_node : Node2D = string_bullet
@@ -203,9 +222,15 @@ func tighten_rope(tighten_forward=true):
 			var dist_to_last = last_rope_node.global_position.distance_to(rope_node.global_position)
 			if dist_to_last > DIST_BETWEEN_ROPE_NODES:
 				var dir_from_last = (rope_node.global_position - last_rope_node.global_position) / dist_to_last
-				rope_node.global_position = last_rope_node.global_position + dir_from_last * DIST_BETWEEN_ROPE_NODES
+				tighten_rope_node_to_pos(rope_node, last_rope_node.global_position + dir_from_last * DIST_BETWEEN_ROPE_NODES)
+				#rope_node.global_position = last_rope_node.global_position + dir_from_last * DIST_BETWEEN_ROPE_NODES
 			last_rope_node = rope_node
 			ind += 1
+#		if tighten_player:
+#			var dist_to_last = last_rope_node.global_position.distance_to(global_position)
+#			if dist_to_last > DIST_BETWEEN_ROPE_NODES:
+#				var dir_from_last = (global_position - last_rope_node.global_position) / dist_to_last
+#				global_position = last_rope_node.global_position + dir_from_last * DIST_BETWEEN_ROPE_NODES
 	else:
 		var last_rope_node : Node2D = self
 		ind = cur_active_rope_node_ind
@@ -214,9 +239,65 @@ func tighten_rope(tighten_forward=true):
 			var dist_to_last = last_rope_node.global_position.distance_to(rope_node.global_position)
 			if dist_to_last > DIST_BETWEEN_ROPE_NODES:
 				var dir_from_last = (rope_node.global_position - last_rope_node.global_position) / dist_to_last
-				rope_node.global_position = last_rope_node.global_position + dir_from_last * DIST_BETWEEN_ROPE_NODES
+				tighten_rope_node_to_pos(rope_node, last_rope_node.global_position + dir_from_last * DIST_BETWEEN_ROPE_NODES)
+				#rope_node.global_position = last_rope_node.global_position + dir_from_last * DIST_BETWEEN_ROPE_NODES
 			last_rope_node = rope_node
 			ind -= 1
+
+func tighten_rope_node_to_pos(rope_node: RopeNode, goal_pos: Vector2):
+	var cur_pos = rope_node.global_position
+	var space_state = get_world_2d().get_direct_space_state()
+	var ray_offset = cur_pos - goal_pos
+	var ray_offset_len = ray_offset.length()
+	if ray_offset_len > 40.0:
+		ray_offset /= ray_offset_len
+	var ray_start_pos = cur_pos + ray_offset
+	var offset_check = space_state.intersect_ray(cur_pos, ray_start_pos, [], 1)
+	if offset_check:
+		ray_start_pos = offset_check.position + ray_offset / ray_offset_len * 1.0
+	var result = space_state.intersect_ray(ray_start_pos, goal_pos, [], 1)
+	if result:
+		rope_node.global_position = result.position
+#		var object_hit = result.collider
+#		if object_hit is RigidBody2D:
+#			#object_hit.apply_central_impulse((goal_pos-cur_pos))
+#			object_hit.linear_velocity += goal_pos-cur_pos
+#			var velo_len = object_hit.linear_velocity.length()
+#			var player_velo_len = velocity.length()
+#			if velo_len > player_velo_len:
+#				object_hit.linear_velocity /= velo_len * player_velo_len
+	else:
+		rope_node.global_position = goal_pos
+
+func spool_rope_evenly():
+	var rope_node_positions = []
+	var last_rope_node = string_bullet
+	var rope_updated = false
+	var ind = 0
+	for rope_node in rope_nodes:
+		var last_pos = last_rope_node.global_position
+		var cur_pos = rope_node.global_position
+		var dist_to_last = cur_pos.distance_to(last_pos)
+		if dist_to_last > DIST_BETWEEN_ROPE_NODES * 2.0:
+			var dir_to_last = (last_pos - cur_pos) / dist_to_last
+			for i in range(int(dist_to_last / DIST_BETWEEN_ROPE_NODES) - 1):
+				rope_node_positions.append(cur_pos + dir_to_last * DIST_BETWEEN_ROPE_NODES * i)
+				rope_updated = true
+		if ind <= cur_active_rope_node_ind:
+			rope_node_positions.append(cur_pos)
+		last_rope_node = rope_node
+		ind += 1
+	if !rope_updated:
+		return
+	if rope_node_positions.size() > rope_nodes.size():
+		deactivate_rope()
+	else:
+		cur_active_rope_node_ind = rope_node_positions.size()-1
+		ind = 0 
+		for rope_node_position in rope_node_positions:
+			rope_nodes[ind].activate()
+			rope_nodes[ind].global_position = rope_node_position
+			ind += 1
 
 func deactivate_rope():
 	rope_active = false
@@ -266,9 +347,31 @@ func _draw():
 
 func kill_all_touching_rope():
 	var killed_something = false
+	var last_rope_node_pos = global_position
+	var ind = 0
 	for rope_node in rope_nodes:
+		if ind > cur_active_rope_node_ind:
+			break
+		if ind < 3: #skip first 3
+			ind += 1
+			continue
 		if rope_node.kill_nearby():
 				killed_something = true
+		var space_state = get_world_2d().get_direct_space_state()
+		var hitting_something = true
+		var to_ignore = []
+		while hitting_something:
+			var result = space_state.intersect_ray(last_rope_node_pos, rope_node.global_position, to_ignore, 2)
+			if result:
+				hitting_something = true
+				to_ignore.append(result.collider)
+				if result.collider.has_method("kill"):
+					result.collider.kill(true)
+					killed_something = true 
+			else:
+				hitting_something = false
+		last_rope_node_pos = rope_node.global_position
+		ind += 1
 	if killed_something:
 		just_killed_something = true
 		$JustKilledSomethingTimer.start()

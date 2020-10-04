@@ -2,9 +2,9 @@ extends KinematicBody2D
 
 class_name Enemy
 
-onready var anim_player = $Graphics/AnimationPlayer
-onready var ally_detector : Area2D = $AllyDetector
-onready var player_detector : Area2D  = $PlayerDetector
+onready var anim_player : AnimationPlayer
+onready var ally_detector : Area2D
+onready var player_detector : Area2D
 
 var player : KinematicBody2D
 var nav : Navigation2D
@@ -17,7 +17,14 @@ func _ready():
 	player = get_tree().get_nodes_in_group("player")[0]
 	nav = get_tree().get_nodes_in_group("navigation")[0]
 	
-	player_detector.connect("body_entered", self, "hurt_player")
+	
+	if has_node("Graphics/AnimationPlayer"):
+		anim_player = $Graphics/AnimationPlayer
+	if has_node("AllyDetector"):
+		ally_detector = $AllyDetector
+	if has_node("PlayerDetector"):
+		player_detector = $PlayerDetector
+		player_detector.connect("body_entered", self, "hurt_player")
 	ready_hook()
 
 func ready_hook():
@@ -78,7 +85,7 @@ func has_los_target_pos(target_pos: Vector2):
 var last_tick_hit = 0
 var times_hit_this_frame = 0
 var dead = false
-func kill():
+func kill(instakill=false):
 	if dead:
 		return false
 	var cur_tick = OS.get_ticks_msec()
@@ -86,7 +93,7 @@ func kill():
 		last_tick_hit = cur_tick
 		times_hit_this_frame = 0
 	times_hit_this_frame += 1
-	if times_hit_this_frame >= 6:
+	if times_hit_this_frame >= 6 or instakill:
 		dead = true
 		$GibsSpawner.spawn_gibs()
 		emit_signal("died")

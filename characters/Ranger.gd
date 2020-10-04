@@ -27,10 +27,12 @@ func _physics_process(delta):
 		STATES.WALK:
 			process_state_walk(delta)
 
+var random_move_vec = Vector2.RIGHT
 func set_state_reloading():
 	cur_state = STATES.RELOADING
 	#anim_player.play("ready_charge")
 	time_in_reload_state = 0.0
+	random_move_vec = Vector2.RIGHT.rotated(rand_range(0.0, 2 * PI))
 
 func set_state_attack():
 	cur_state = STATES.ATTACK
@@ -56,6 +58,15 @@ func process_state_reloading(delta):
 	time_in_reload_state += delta
 	if time_in_reload_state >= time_to_spend_reloading:
 		set_state_attack()
+	
+	var repel_vec = get_repulsion_vector()
+	var updated_move_vec = random_move_vec * (1.0 - repel_amount) + repel_vec * repel_amount
+	move_and_slide(updated_move_vec * walk_speed, Vector2(), false, 4, 0.785398, false)
+	for i in range(get_slide_count()):
+		var coll : KinematicCollision2D = get_slide_collision(i)
+		if coll.collider is RopeNode:
+			coll.collider.push(global_position.direction_to(coll.position) * 4.0)
+	play_move_anim(random_move_vec)
 
 func process_state_walk(delta):
 	if has_los_target_pos(player.global_position):

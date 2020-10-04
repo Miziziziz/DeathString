@@ -12,6 +12,7 @@ func activate():
 	$CollisionShape2D.disabled = false
 
 func kill_nearby():
+	# currently only used for chargin enemy boss projectiles
 	var killed_something = false
 	for body in $Area.get_overlapping_bodies():
 		if body.has_method("kill"):
