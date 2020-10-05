@@ -247,25 +247,25 @@ func tighten_rope(tighten_forward=true, tighten_player=false):
 func tighten_rope_node_to_pos(rope_node: RopeNode, goal_pos: Vector2):
 	var cur_pos = rope_node.global_position
 	var space_state = get_world_2d().get_direct_space_state()
+#	var ray_offset = cur_pos - goal_pos
+#	var ray_offset_len = ray_offset.length()
+#	if ray_offset_len > 40.0:
+#		ray_offset /= ray_offset_len
+#		ray_offset *= 40.0
+#	var ray_start_pos = cur_pos + ray_offset
+#	var offset_check = space_state.intersect_ray(cur_pos, ray_start_pos, [], 1+2)
+#	if offset_check:
+#		ray_start_pos = offset_check.position + ray_offset / ray_offset_len * 1.0
+	
 	var ray_offset = cur_pos - goal_pos
 	var ray_offset_len = ray_offset.length()
-	if ray_offset_len > 40.0:
-		ray_offset /= ray_offset_len
-	var ray_start_pos = cur_pos + ray_offset
-	var offset_check = space_state.intersect_ray(cur_pos, ray_start_pos, [], 1)
-	if offset_check:
-		ray_start_pos = offset_check.position + ray_offset / ray_offset_len * 1.0
-	var result = space_state.intersect_ray(ray_start_pos, goal_pos, [], 1)
+	var ray_dir = Vector2()
+	if ray_offset_len > 0:
+		ray_dir = ray_offset / ray_offset_len
+	#var ray_end_pos = cur_pos + ray_dir * (ray_offset_len + rope_node.get_radius())
+	var result = space_state.intersect_ray(cur_pos, goal_pos, [self], 1+2)
 	if result:
-		rope_node.global_position = result.position
-#		var object_hit = result.collider
-#		if object_hit is RigidBody2D:
-#			#object_hit.apply_central_impulse((goal_pos-cur_pos))
-#			object_hit.linear_velocity += goal_pos-cur_pos
-#			var velo_len = object_hit.linear_velocity.length()
-#			var player_velo_len = velocity.length()
-#			if velo_len > player_velo_len:
-#				object_hit.linear_velocity /= velo_len * player_velo_len
+		rope_node.global_position = result.position + result.normal * rope_node.get_radius()
 	else:
 		rope_node.global_position = goal_pos
 

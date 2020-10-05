@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://characters/Boss.gd" type="Script" id=1]
 [ext_resource path="res://characters/BossHealthNode.tscn" type="PackedScene" id=2]
@@ -30,6 +30,41 @@ expand_margin_bottom = 2.0
 size = 10
 font_data = ExtResource( 4 )
 
+[sub_resource type="Animation" id=6]
+resource_name = "spin"
+length = 20.0
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("HealthNodes:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 20 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 0.0, 360.0 ]
+}
+
+[sub_resource type="Animation" id=7]
+resource_name = "spin"
+length = 30.0
+loop = true
+step = 1.0
+tracks/0/type = "value"
+tracks/0/path = NodePath("HealthNodes2:rotation_degrees")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 30 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 0,
+"values": [ 0.0, -360.0 ]
+}
+
 [node name="Boss" type="StaticBody2D" groups=[
 "enemies",
 ]]
@@ -46,6 +81,7 @@ scale = Vector2( 2, 2 )
 texture = ExtResource( 3 )
 
 [node name="HealthNodes" type="Node2D" parent="."]
+rotation = 1.20924
 
 [node name="BossHealthNode" parent="HealthNodes" instance=ExtResource( 2 )]
 position = Vector2( -64, 0 )
@@ -70,6 +106,33 @@ position = Vector2( 0, 64 )
 
 [node name="BossHealthNode8" parent="HealthNodes" instance=ExtResource( 2 )]
 position = Vector2( -48, 48 )
+
+[node name="HealthNodes2" type="Node2D" parent="."]
+rotation = -1.93877
+
+[node name="BossHealthNode" parent="HealthNodes2" instance=ExtResource( 2 )]
+position = Vector2( -112, 0 )
+
+[node name="BossHealthNode2" parent="HealthNodes2" instance=ExtResource( 2 )]
+position = Vector2( -80, -80 )
+
+[node name="BossHealthNode3" parent="HealthNodes2" instance=ExtResource( 2 )]
+position = Vector2( 0, -112 )
+
+[node name="BossHealthNode4" parent="HealthNodes2" instance=ExtResource( 2 )]
+position = Vector2( 80, -80 )
+
+[node name="BossHealthNode5" parent="HealthNodes2" instance=ExtResource( 2 )]
+position = Vector2( 112, 0 )
+
+[node name="BossHealthNode6" parent="HealthNodes2" instance=ExtResource( 2 )]
+position = Vector2( 80, 80 )
+
+[node name="BossHealthNode7" parent="HealthNodes2" instance=ExtResource( 2 )]
+position = Vector2( 0, 112 )
+
+[node name="BossHealthNode8" parent="HealthNodes2" instance=ExtResource( 2 )]
+position = Vector2( -80, 80 )
 
 [node name="PlayerDetector" type="Area2D" parent="."]
 
@@ -107,3 +170,11 @@ margin_right = 45.0
 margin_bottom = 6.5
 custom_fonts/font = SubResource( 5 )
 text = "Hell Maw"
+
+[node name="SpinAnimationPlayer" type="AnimationPlayer" parent="."]
+autoplay = "spin"
+anims/spin = SubResource( 6 )
+
+[node name="SpinAnimationPlayer2" type="AnimationPlayer" parent="."]
+autoplay = "spin"
+anims/spin = SubResource( 7 )

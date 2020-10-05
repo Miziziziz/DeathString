@@ -6,7 +6,7 @@ enum STATES {IDLE, FIRST_STAGE, SECOND_STAGE, DEAD}
 var cur_state = STATES.IDLE
 
 var player = null
-onready var health_nodes = get_node("HealthNodes").get_children()
+onready var health_nodes = []
 var first_stage_health = 0
 
 var energy_bullet_obj = preload("res://projectiles/EnergyBullet.tscn")
@@ -17,7 +17,7 @@ var fire_rotation_offset = 0.0
 var large_energy_bullet_obj = preload("res://projectiles/LargeEnergyBullet.tscn")
 var large_projectile_fire_rate = 3.0
 
-export var second_stage_health = 5
+export var second_stage_health = 3
 
 var cur_fire_time = 0.0
 
@@ -27,6 +27,7 @@ signal died
 signal health_updated
 
 func _ready():
+	health_nodes = $HealthNodes.get_children() + $HealthNodes2.get_children()
 	player = get_tree().get_nodes_in_group("player")[0]
 	first_stage_health = health_nodes.size()
 	for health_node in health_nodes:

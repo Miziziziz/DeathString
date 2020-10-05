@@ -11,6 +11,9 @@ func activate():
 	show()
 	$CollisionShape2D.disabled = false
 
+func get_radius():
+	return $CollisionShape2D.shape.radius
+
 func kill_nearby():
 	# currently only used for chargin enemy boss projectiles
 	var killed_something = false

@@ -68,7 +68,6 @@ LevelManager="*res://singletons/LevelManager.tscn"
 
 window/size/width=512
 window/size/height=300
-window/size/fullscreen=true
 mouse_cursor/custom_image="res://sprites/crosshair_open.png"
 mouse_cursor/custom_image_hotspot=Vector2( 16, 16 )
 window/stretch/mode="viewport"
