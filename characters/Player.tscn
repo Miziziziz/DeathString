@@ -1,4 +1,4 @@
-[gd_scene load_steps=18 format=2]
+[gd_scene load_steps=34 format=2]
 
 [ext_resource path="res://characters/Player.gd" type="Script" id=1]
 [ext_resource path="res://circle.png" type="Texture" id=2]
@@ -8,8 +8,24 @@
 [ext_resource path="res://ui/KleintenDynFont.tres" type="DynamicFont" id=6]
 [ext_resource path="res://characters/LevelDisplay.gd" type="Script" id=7]
 [ext_resource path="res://sprites/player.png" type="Texture" id=8]
+[ext_resource path="res://sfx/MC/pickup health.wav" type="AudioStream" id=9]
+[ext_resource path="res://sfx/MC/max health increase.wav" type="AudioStream" id=10]
+[ext_resource path="res://sfx/MC/electric sound loop.wav" type="AudioStream" id=11]
+[ext_resource path="res://sfx/MC/shoot string.wav" type="AudioStream" id=12]
+[ext_resource path="res://sfx/MC/take damage 2.wav" type="AudioStream" id=13]
+[ext_resource path="res://sfx/MC/take damage 1.wav" type="AudioStream" id=14]
+[ext_resource path="res://sfx/PlayRandomSound.gd" type="Script" id=15]
+[ext_resource path="res://sfx/MC/take damage 3.wav" type="AudioStream" id=16]
+[ext_resource path="res://sfx/MC/take damage 4.wav" type="AudioStream" id=17]
+[ext_resource path="res://sfx/MC/footsteps/step1.wav" type="AudioStream" id=18]
+[ext_resource path="res://sfx/MC/footsteps/step4.wav" type="AudioStream" id=19]
+[ext_resource path="res://sfx/MC/footsteps/step2.wav" type="AudioStream" id=20]
+[ext_resource path="res://sfx/MC/footsteps/step3.wav" type="AudioStream" id=21]
+[ext_resource path="res://sfx/MC/footsteps/step5.wav" type="AudioStream" id=22]
+[ext_resource path="res://sfx/MC/amped up electric sound loop.wav" type="AudioStream" id=23]
+[ext_resource path="res://sfx/MC/MC DEATH.wav" type="AudioStream" id=24]
 
-[sub_resource type="Animation" id=8]
+[sub_resource type="Animation" id=1]
 resource_name = "dead"
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:frame")
@@ -24,7 +40,7 @@ tracks/0/keys = {
 "values": [ 24 ]
 }
 
-[sub_resource type="Animation" id=6]
+[sub_resource type="Animation" id=2]
 resource_name = "idle"
 length = 0.4
 loop = true
@@ -41,7 +57,7 @@ tracks/0/keys = {
 "values": [ 0, 1, 2, 3 ]
 }
 
-[sub_resource type="Animation" id=9]
+[sub_resource type="Animation" id=3]
 resource_name = "invincible"
 length = 0.2
 loop = true
@@ -58,7 +74,7 @@ tracks/0/keys = {
 "values": [ 16, 17 ]
 }
 
-[sub_resource type="Animation" id=7]
+[sub_resource type="Animation" id=4]
 resource_name = "run"
 length = 0.8
 loop = true
@@ -74,12 +90,28 @@ tracks/0/keys = {
 "update": 1,
 "values": [ 8, 9, 10, 11, 12, 13, 14, 15 ]
 }
+tracks/1/type = "method"
+tracks/1/path = NodePath("../StepSounds")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.4 ),
+"transitions": PoolRealArray( 1, 1 ),
+"values": [ {
+"args": [  ],
+"method": "play"
+}, {
+"args": [  ],
+"method": "play"
+} ]
+}
 
-[sub_resource type="CircleShape2D" id=1]
+[sub_resource type="CircleShape2D" id=5]
 radius = 5.0
 
-[sub_resource type="Animation" id=2]
-resource_name = "idle"
+[sub_resource type="Animation" id=6]
 tracks/0/type = "value"
 tracks/0/path = NodePath("Graphics:modulate")
 tracks/0/interp = 1
@@ -93,8 +125,7 @@ tracks/0/keys = {
 "values": [ Color( 1, 1, 1, 1 ) ]
 }
 
-[sub_resource type="Animation" id=3]
-resource_name = "invincible"
+[sub_resource type="Animation" id=7]
 length = 0.3
 loop = true
 step = 0.05
@@ -111,10 +142,10 @@ tracks/0/keys = {
 "values": [ Color( 0.784314, 0.160784, 0.160784, 1 ), Color( 1, 1, 1, 1 ) ]
 }
 
-[sub_resource type="CircleShape2D" id=4]
+[sub_resource type="CircleShape2D" id=8]
 radius = 11.0
 
-[sub_resource type="Environment" id=5]
+[sub_resource type="Environment" id=9]
 background_mode = 4
 glow_enabled = true
 glow_intensity = 0.4
@@ -129,6 +160,7 @@ adjustment_contrast = 1.2
 collision_layer = 6
 collision_mask = 17
 script = ExtResource( 1 )
+max_health = 7
 max_speed = 200
 move_accel = 40
 rope_normal_color = Color( 0.545098, 0.552941, 1, 1 )
@@ -145,16 +177,17 @@ position = Vector2( 0, -4 )
 texture = ExtResource( 8 )
 vframes = 4
 hframes = 8
+frame = 12
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Graphics"]
 autoplay = "idle"
-anims/dead = SubResource( 8 )
-anims/idle = SubResource( 6 )
-anims/invincible = SubResource( 9 )
-anims/run = SubResource( 7 )
+anims/dead = SubResource( 1 )
+anims/idle = SubResource( 2 )
+anims/invincible = SubResource( 3 )
+anims/run = SubResource( 4 )
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource( 1 )
+shape = SubResource( 5 )
 
 [node name="Sprite" type="Sprite" parent="."]
 visible = false
@@ -445,22 +478,93 @@ one_shot = true
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 autoplay = "idle"
-anims/idle = SubResource( 2 )
-anims/invincible = SubResource( 3 )
+anims/idle = SubResource( 6 )
+anims/invincible = SubResource( 7 )
 
 [node name="PickupsDetector" type="Area2D" parent="."]
 collision_layer = 0
 collision_mask = 8
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PickupsDetector"]
-shape = SubResource( 4 )
+shape = SubResource( 8 )
 
 [node name="JustKilledSomethingTimer" type="Timer" parent="."]
 wait_time = 0.5
 one_shot = true
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
-environment = SubResource( 5 )
+environment = SubResource( 9 )
+
+[node name="ElectricSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 11 )
+bus = "Sfx"
+
+[node name="PowerfulElectricSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 23 )
+volume_db = 8.0
+bus = "Sfx"
+
+[node name="PickedUpHealthSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 9 )
+bus = "Sfx"
+
+[node name="IncreasedHealthSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 10 )
+bus = "Sfx"
+
+[node name="ShootSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 12 )
+bus = "Sfx"
+
+[node name="StepSounds" type="Node2D" parent="."]
+script = ExtResource( 15 )
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="StepSounds"]
+stream = ExtResource( 18 )
+volume_db = -5.0
+bus = "Sfx"
+
+[node name="AudioStreamPlayer2D2" type="AudioStreamPlayer2D" parent="StepSounds"]
+stream = ExtResource( 20 )
+volume_db = -5.0
+bus = "Sfx"
+
+[node name="AudioStreamPlayer2D3" type="AudioStreamPlayer2D" parent="StepSounds"]
+stream = ExtResource( 21 )
+volume_db = -5.0
+bus = "Sfx"
+
+[node name="AudioStreamPlayer2D4" type="AudioStreamPlayer2D" parent="StepSounds"]
+stream = ExtResource( 19 )
+volume_db = -5.0
+bus = "Sfx"
+
+[node name="AudioStreamPlayer2D5" type="AudioStreamPlayer2D" parent="StepSounds"]
+stream = ExtResource( 22 )
+volume_db = -5.0
+bus = "Sfx"
+
+[node name="HurtSounds" type="Node2D" parent="."]
+script = ExtResource( 15 )
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="HurtSounds"]
+stream = ExtResource( 14 )
+bus = "Sfx"
+
+[node name="AudioStreamPlayer2D2" type="AudioStreamPlayer2D" parent="HurtSounds"]
+stream = ExtResource( 13 )
+bus = "Sfx"
+
+[node name="AudioStreamPlayer2D3" type="AudioStreamPlayer2D" parent="HurtSounds"]
+stream = ExtResource( 16 )
+bus = "Sfx"
+
+[node name="AudioStreamPlayer2D4" type="AudioStreamPlayer2D" parent="HurtSounds"]
+stream = ExtResource( 17 )
+bus = "Sfx"
+
+[node name="DeathSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 24 )
 [connection signal="timeout" from="BulletCanCollideWithPlayerTimer" to="." method="bullet_can_collide_with_player"]
 [connection signal="timeout" from="DeactivateRopeTimer" to="." method="deactivate_rope"]
 [connection signal="timeout" from="RopeKillAnimTimer" to="." method="toggle_rope_graphics"]

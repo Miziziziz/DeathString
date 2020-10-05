@@ -1,20 +1,23 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=16 format=2]
 
 [ext_resource path="res://sprites/slow_boi_spritesheet.png" type="Texture" id=1]
 [ext_resource path="res://characters/Ranger.gd" type="Script" id=2]
 [ext_resource path="res://effects/GibsSpawner.tscn" type="PackedScene" id=3]
+[ext_resource path="res://sfx/AlertSounds.tscn" type="PackedScene" id=4]
+[ext_resource path="res://sfx/PlayRandomSound.gd" type="Script" id=6]
+[ext_resource path="res://sfx/ENEMY/enemy shoot 2.wav" type="AudioStream" id=7]
+[ext_resource path="res://sfx/ENEMY/enemy shoot 1.wav" type="AudioStream" id=8]
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 5.88085
 
-[sub_resource type="CircleShape2D" id=7]
+[sub_resource type="CircleShape2D" id=9]
 radius = 10.1295
 
-[sub_resource type="CircleShape2D" id=8]
+[sub_resource type="CircleShape2D" id=10]
 radius = 5.90328
 
-[sub_resource type="Animation" id=2]
-resource_name = "idle"
+[sub_resource type="Animation" id=11]
 length = 0.8
 loop = true
 tracks/0/type = "value"
@@ -30,7 +33,7 @@ tracks/0/keys = {
 "values": [ 24, 25, 26, 27 ]
 }
 
-[sub_resource type="Animation" id=3]
+[sub_resource type="Animation" id=12]
 length = 0.6
 loop = true
 tracks/0/type = "value"
@@ -46,8 +49,7 @@ tracks/0/keys = {
 "values": [ 0, 1, 2, 3, 4, 5 ]
 }
 
-[sub_resource type="Animation" id=4]
-resource_name = "move_left"
+[sub_resource type="Animation" id=13]
 length = 0.6
 loop = true
 tracks/0/type = "value"
@@ -63,7 +65,7 @@ tracks/0/keys = {
 "values": [ 18, 19, 20, 21, 22, 23 ]
 }
 
-[sub_resource type="Animation" id=5]
+[sub_resource type="Animation" id=7]
 length = 0.6
 loop = true
 tracks/0/type = "value"
@@ -79,7 +81,7 @@ tracks/0/keys = {
 "values": [ 12, 13, 14, 15, 16, 17 ]
 }
 
-[sub_resource type="Animation" id=6]
+[sub_resource type="Animation" id=8]
 length = 0.6
 loop = true
 tracks/0/type = "value"
@@ -100,6 +102,7 @@ tracks/0/keys = {
 ]]
 collision_layer = 2
 script = ExtResource( 2 )
+char_radius = 7
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 1 )
@@ -111,14 +114,14 @@ collision_layer = 0
 collision_mask = 2
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="AllyDetector"]
-shape = SubResource( 7 )
+shape = SubResource( 9 )
 
 [node name="PlayerDetector" type="Area2D" parent="."]
 collision_layer = 0
 collision_mask = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerDetector"]
-shape = SubResource( 8 )
+shape = SubResource( 10 )
 
 [node name="Graphics" type="Node2D" parent="."]
 modulate = Color( 0, 1, 0.0862745, 1 )
@@ -131,8 +134,21 @@ hframes = 6
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Graphics"]
 autoplay = "idle"
-anims/idle = SubResource( 2 )
-anims/move_down = SubResource( 3 )
-anims/move_left = SubResource( 4 )
-anims/move_right = SubResource( 5 )
-anims/move_up = SubResource( 6 )
+anims/idle = SubResource( 11 )
+anims/move_down = SubResource( 12 )
+anims/move_left = SubResource( 13 )
+anims/move_right = SubResource( 7 )
+anims/move_up = SubResource( 8 )
+
+[node name="AlertSounds" parent="." instance=ExtResource( 4 )]
+
+[node name="ShootSounds" type="Node2D" parent="."]
+script = ExtResource( 6 )
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="ShootSounds"]
+stream = ExtResource( 8 )
+bus = "Sfx"
+
+[node name="AudioStreamPlayer2D2" type="AudioStreamPlayer2D" parent="ShootSounds"]
+stream = ExtResource( 7 )
+bus = "Sfx"

@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/phase 2 attack 1.wav-1d2bd7459e5b8208f4382a932e64d887.sample"
+
+[deps]
+
+source_file="res://sfx/BOSS/phase 2 attack 1.wav"
+dest_files=[ "res://.import/phase 2 attack 1.wav-1d2bd7459e5b8208f4382a932e64d887.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=true
+edit/loop=false
+compress/mode=0

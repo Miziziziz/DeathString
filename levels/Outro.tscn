@@ -1,7 +1,8 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://ui/KLEINTEN.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://levels/PressEnterToContinue.gd" type="Script" id=2]
+[ext_resource path="res://sfx/TEXT SCROLL/text scroll outro loop.wav" type="AudioStream" id=3]
 
 [sub_resource type="Animation" id=1]
 resource_name = "scrol_text"
@@ -17,6 +18,18 @@ tracks/0/keys = {
 "transitions": PoolRealArray( 1, 1 ),
 "update": 0,
 "values": [ 0.0, 1.0 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("AudioStreamPlayer:playing")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 3 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
 }
 
 [sub_resource type="DynamicFont" id=2]
@@ -52,6 +65,11 @@ The Mechanical Hero is destroyed to purge the tainted essences now covering it
 Press Enter to Continue"
 align = 1
 valign = 1
+percent_visible = 0.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 3 )
+bus = "Sfx"

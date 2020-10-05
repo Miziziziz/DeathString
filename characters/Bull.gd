@@ -16,6 +16,7 @@ var time_in_ready_charge_state = 0.0
 func _physics_process(delta):
 	if cur_state == STATES.IDLE:
 		if has_los_target_pos(player.global_position):
+			$AlertSounds.play()
 			set_state_ready_charge()
 		return
 	
@@ -27,8 +28,10 @@ func _physics_process(delta):
 		STATES.WALK:
 			process_state_walk(delta)
 
+var about_to_charge = false
 func set_state_ready_charge():
 	cur_state = STATES.READY_CHARGE
+	about_to_charge = false
 	anim_player.play("ready_charge")
 	time_in_ready_charge_state = 0.0
 
@@ -43,8 +46,11 @@ func set_state_walk():
 
 func process_state_charge(delta):
 	time_in_charge_state += delta
+	
 	if time_in_charge_state >= time_to_spend_charging:
+		$ChargeSound.stop()
 		set_state_walk()
+		
 	move_and_slide(charge_dir * charge_speed, Vector2(), false, 4, 0.785398, false)
 	for i in range(get_slide_count()):
 		var coll : KinematicCollision2D = get_slide_collision(i)
@@ -53,6 +59,12 @@ func process_state_charge(delta):
 
 func process_state_ready_charge(delta):
 	time_in_ready_charge_state += delta
+	if time_in_ready_charge_state  >= time_to_spend_readying_charge / 2.0 and !about_to_charge:
+		anim_player.stop()
+		anim_player.play("ready_charge", -1, 2.0)
+		$ChargeSound.play()
+		#anim_player.play("spin")
+		about_to_charge = true
 	if time_in_ready_charge_state >= time_to_spend_readying_charge:
 		set_state_charge()
 

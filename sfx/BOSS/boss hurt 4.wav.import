@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/boss hurt 4.wav-9f9bb91e79927abf16f26a6fe0e27958.sample"
+
+[deps]
+
+source_file="res://sfx/BOSS/boss hurt 4.wav"
+dest_files=[ "res://.import/boss hurt 4.wav-9f9bb91e79927abf16f26a6fe0e27958.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=true
+edit/loop=false
+compress/mode=0

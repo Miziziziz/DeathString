@@ -29,6 +29,7 @@ signal died
 signal health_updated
 
 func _ready():
+	LevelManager.stop_music()
 	health_nodes = $HealthNodes.get_children() + $HealthNodes2.get_children()
 	player = get_tree().get_nodes_in_group("player")[0]
 	first_stage_health = health_nodes.size()
@@ -39,6 +40,7 @@ func _ready():
 	start_health = second_stage_health + first_stage_health
 	connect("health_updated", $CanvasLayer/BossHealthDisplay, "update_health")
 	emit_updated_health()
+	
 
 func hurt_player(coll):
 	if coll.has_method("hurt"):
@@ -71,6 +73,7 @@ func fire_projectile():
 	anim_player.play("idle", 0.2)
 
 func fire_small_projectiles():
+	$Phase1AttackSounds.play()
 	var angle_between_shots = 2 * PI / num_of_small_projectiles_to_fire
 	for i in range(num_of_small_projectiles_to_fire):
 		var energy_bullet_inst = energy_bullet_obj.instance()
@@ -83,6 +86,7 @@ func fire_small_projectiles():
 		fire_rotation_offset = 0.0
 
 func fire_large_projectile():
+	$Phase1AttackSounds.play()
 	var large_energy_bullet_inst = large_energy_bullet_obj.instance()
 	get_tree().get_root().add_child(large_energy_bullet_inst)
 	large_energy_bullet_inst.global_position = global_position
@@ -91,6 +95,8 @@ func fire_large_projectile():
 func set_state_first_stage():
 	cur_state = STATES.FIRST_STAGE
 	cur_fire_time = 0.0
+	$AwakenSound.play()
+	$PlayMusicTimer.start()
 	for child in get_children():
 		if child is EnemySpawner:
 			child.start_spawning()
@@ -98,9 +104,16 @@ func set_state_first_stage():
 func set_state_second_stage():
 	cur_state = STATES.SECOND_STAGE
 	cur_fire_time = 0.0
+	$EnterPhase2Sound.play()
 
 func set_state_dead():
 	cur_state = STATES.DEAD
+	$DeathSound.play()
+	
+	$Graphics.hide()
+	$PlayerDetector/CollisionShape2D.disabled = true
+	$CollisionShape2D.disabled = true
+	$Music.stop()
 	for child in get_children():
 		if child is EnemySpawner:
 			child.stop_spawning()
@@ -115,6 +128,9 @@ func set_state_dead():
 			enemy_bullet.destroy()
 	emit_signal("died")
 	anim_player.play("dead")
+	
+	yield(get_tree(), "idle_frame")
+	$GibsSpawner.spawn_gibs()
 
 func hurt():
 	if cur_state == STATES.DEAD:
@@ -122,6 +138,7 @@ func hurt():
 	if cur_state == STATES.IDLE:
 		set_state_first_stage()
 	
+	$HurtSounds.play()
 	if anim_player.current_animation != "attack":
 		anim_player.play("hurt")
 	if first_stage_health > 0:

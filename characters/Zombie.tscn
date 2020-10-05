@@ -1,8 +1,9 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://sprites/slow_boi_spritesheet.png" type="Texture" id=1]
 [ext_resource path="res://characters/Zombie.gd" type="Script" id=2]
 [ext_resource path="res://effects/GibsSpawner.tscn" type="PackedScene" id=3]
+[ext_resource path="res://sfx/AlertSounds.tscn" type="PackedScene" id=4]
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 5.88085
@@ -100,6 +101,7 @@ radius = 6.81084
 ]]
 collision_layer = 2
 script = ExtResource( 2 )
+char_radius = 7
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 1 )
@@ -135,3 +137,5 @@ collision_mask = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerDetector"]
 shape = SubResource( 8 )
+
+[node name="AlertSounds" parent="." instance=ExtResource( 4 )]

@@ -1,0 +1,15 @@
+[remap]
+
+importer="ogg_vorbis"
+type="AudioStreamOGGVorbis"
+path="res://.import/gameplay regular track.ogg-f3294b3d35eaab3a34485d1c30016cab.oggstr"
+
+[deps]
+
+source_file="res://music/gameplay regular track.ogg"
+dest_files=[ "res://.import/gameplay regular track.ogg-f3294b3d35eaab3a34485d1c30016cab.oggstr" ]
+
+[params]
+
+loop=true
+loop_offset=0

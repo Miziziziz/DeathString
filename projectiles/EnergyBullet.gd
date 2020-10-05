@@ -26,4 +26,9 @@ func _physics_process(delta):
 
 func destroy():
 	destroyed = true
-	queue_free()
+	$DeleteTimer.start()
+	$CollisionShape2D.set_deferred("disabled", true)
+	$HitSound.play()
+	$Graphics/AnimationPlayer.play("die")
+	move_vec = Vector2.ZERO
+	#queue_free()

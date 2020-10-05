@@ -27,6 +27,7 @@ func hurt_player(coll):
 		destroy()
 	if electrified and coll.has_method("kill"):
 		coll.call_deferred("kill", true)
+		#$ElectrifyEnemySounds.play()
 		return
 
 func _physics_process(delta):
@@ -50,12 +51,14 @@ func _physics_process(delta):
 		var n = coll.normal
 		var r = d - 2 * d.dot(n) * n
 		move_vec = r
+		$BounceSounds.play()
 
 func kill():
 	if electrified:
 		return
 	electrified = true
-	
+	$ElectrifiedSound.play()
+	$ElectrifiedSound/Timer.start()
 	collision_mask = 1 + 4 + 16
 	#$Sprite.self_modulate = Color.blue
 
@@ -77,4 +80,10 @@ func _draw():
 
 func destroy():
 	destroyed = true
-	queue_free()
+	$DeleteTimer.start()
+	$CollisionShape2D.set_deferred("disabled", true)
+	$PlayerDetector/CollisionShape2D.set_deferred("disabled", true)
+	$HitSound.play()
+	$Graphics/AnimationPlayer.play("die")
+	move_vec = Vector2.ZERO
+	#queue_free()

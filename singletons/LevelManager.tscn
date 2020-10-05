@@ -1,6 +1,8 @@
-[gd_scene load_steps=4 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://singletons/LevelManager.gd" type="Script" id=1]
+[ext_resource path="res://sfx/PORTAL/enter portal.wav" type="AudioStream" id=2]
+[ext_resource path="res://music/gameplay regular track.ogg" type="AudioStream" id=3]
 
 [sub_resource type="Animation" id=1]
 resource_name = "fadein"
@@ -209,3 +211,11 @@ __meta__ = {
 [node name="AnimationPlayer" type="AnimationPlayer" parent="CanvasLayer"]
 anims/fadein = SubResource( 1 )
 anims/fadeout = SubResource( 2 )
+
+[node name="EnterPortal" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 2 )
+bus = "Sfx"
+
+[node name="MainGameMusic" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 3 )
+bus = "Music"

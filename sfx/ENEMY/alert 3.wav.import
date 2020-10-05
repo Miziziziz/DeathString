@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/alert 3.wav-8a68ce4b05e653dae6ead4efcb179980.sample"
+
+[deps]
+
+source_file="res://sfx/ENEMY/alert 3.wav"
+dest_files=[ "res://.import/alert 3.wav-8a68ce4b05e653dae6ead4efcb179980.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=true
+edit/loop=false
+compress/mode=0

@@ -35,7 +35,9 @@ tracks/1/keys = {
 "values": [ 0.0, -44.9999, 0.0, 44.9999, 0.0 ]
 }
 
-[node name="HealthPickup" type="Area2D"]
+[node name="HealthPickup" type="Area2D" groups=[
+"instanced",
+]]
 collision_layer = 8
 collision_mask = 2147483648
 script = ExtResource( 2 )

@@ -34,6 +34,7 @@ func _physics_process(delta):
 			emit_signal("returned_to_player")
 			return
 		if !return_button_held:
+			$BounceSound.play()
 			var d = travel_dir
 			var n = coll.normal
 			var r = d - 2 * d.dot(n) * n

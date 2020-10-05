@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/take damage 4.wav-ed5c1eab5283c253f3032a98ad27010e.sample"
+
+[deps]
+
+source_file="res://sfx/MC/take damage 4.wav"
+dest_files=[ "res://.import/take damage 4.wav-ed5c1eab5283c253f3032a98ad27010e.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=true
+edit/loop=false
+compress/mode=0

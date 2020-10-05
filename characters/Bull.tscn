@@ -1,8 +1,10 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=15 format=2]
 
 [ext_resource path="res://sprites/fast_boi.png" type="Texture" id=1]
 [ext_resource path="res://characters/Bull.gd" type="Script" id=2]
 [ext_resource path="res://effects/GibsSpawner.tscn" type="PackedScene" id=3]
+[ext_resource path="res://sfx/ENEMY/enemy charge up.wav" type="AudioStream" id=4]
+[ext_resource path="res://sfx/AlertSounds.tscn" type="PackedScene" id=5]
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 6.0
@@ -155,3 +157,8 @@ collision_mask = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerDetector"]
 shape = SubResource( 9 )
+
+[node name="AlertSounds" parent="." instance=ExtResource( 5 )]
+
+[node name="ChargeSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 4 )

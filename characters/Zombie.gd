@@ -9,6 +9,7 @@ func _physics_process(_delta):
 	if cur_state == STATES.IDLE:
 		if has_los_target_pos(player.global_position):
 			cur_state = STATES.ATTACK
+			$AlertSounds.play()
 		return
 	
 	var move_vec = get_move_vec_to_point(player.global_position) #global_position.direction_to(player.global_position)

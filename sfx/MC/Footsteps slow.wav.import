@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/Footsteps slow.wav-083ed4cc42a75f6fde368026d28fb203.sample"
+
+[deps]
+
+source_file="res://sfx/MC/Footsteps slow.wav"
+dest_files=[ "res://.import/Footsteps slow.wav-083ed4cc42a75f6fde368026d28fb203.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=true
+edit/loop=false
+compress/mode=0

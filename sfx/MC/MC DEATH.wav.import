@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/MC DEATH.wav-9fe699bd3e20236f3b3ba86ff7987952.sample"
+
+[deps]
+
+source_file="res://sfx/MC/MC DEATH.wav"
+dest_files=[ "res://.import/MC DEATH.wav-9fe699bd3e20236f3b3ba86ff7987952.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=true
+edit/loop=false
+compress/mode=0

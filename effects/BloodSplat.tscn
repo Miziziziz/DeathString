@@ -1,9 +1,10 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://effects/BloodSplat.gd" type="Script" id=1]
 [ext_resource path="res://sprites/blood_splat1.png" type="Texture" id=2]
 [ext_resource path="res://sprites/blood_splat3.png" type="Texture" id=3]
 [ext_resource path="res://sprites/blood_splat2.png" type="Texture" id=4]
+[ext_resource path="res://sfx/DeathSounds.tscn" type="PackedScene" id=5]
 
 [node name="BloodSplat" type="Node2D" groups=[
 "instanced",
@@ -23,3 +24,5 @@ texture = ExtResource( 4 )
 
 [node name="Sprite3" type="Sprite" parent="Graphics"]
 texture = ExtResource( 3 )
+
+[node name="DeathSounds" parent="." instance=ExtResource( 5 )]

@@ -12,6 +12,7 @@ signal health_updated
 signal died
 var dead = false
 var invincible = false
+export var perma_invincible = false # for playtesting
 
 export var max_speed = 400
 export var move_accel = 80
@@ -105,9 +106,9 @@ func _process(delta):
 				cur_screen_shake_time = screen_shake_change_rate
 			else:
 				cur_screen_shake_time = 0.0
-#		$Camera2D.offset += Vector2.ONE * cur_screen_shake_offset
-#	else:
-#		$Camera2D.offset = Vector2.ZERO
+		$Camera2D.offset = Vector2.ONE * cur_screen_shake_offset
+	else:
+		$Camera2D.offset = Vector2.ZERO
 	
 	if Input.is_action_just_pressed("instant_retract"):
 		string_bullet.deactivate()
@@ -124,6 +125,7 @@ func _process(delta):
 		var aim_dir = (get_global_mouse_position() - global_position).normalized()
 		string_bullet.shoot(global_position, aim_dir)
 		set_cursor_closed()
+		$ShootSound.play()
 	
 	if Input.is_action_pressed("shoot") and shoot_released and string_bullet.active:
 		string_bullet.shoot(string_bullet.global_position, (global_position - string_bullet.global_position).normalized())
@@ -320,6 +322,8 @@ func deactivate_rope():
 	cur_active_rope_node_ind = -1
 	use_rope_kill_graphics = false
 	rope_kill_anim_timer.stop()
+	$ShootSound.stop()
+	$ElectricSound.stop()
 	update()
 
 func _draw():
@@ -389,6 +393,7 @@ func kill_all_touching_rope():
 	if killed_something:
 		just_killed_something = true
 		$JustKilledSomethingTimer.start()
+		$PowerfulElectricSound.play()
 
 func bullet_returned():
 	bullet_can_collide_with_player_timer.stop()
@@ -396,18 +401,21 @@ func bullet_returned():
 	deactivate_rope_timer.start()
 	rope_kill_anim_timer.start()
 	set_cursor_open()
+	$ElectricSound.play()
 
 func bullet_can_collide_with_player():
 	string_bullet.remove_collision_exception_with(self)
 
 func toggle_rope_graphics():
 	use_rope_kill_graphics = !use_rope_kill_graphics
+#	if !use_rope_kill_graphics:
+#		$ElectricSound.stop()
 
 func set_cursor_open():
-	Input.set_custom_mouse_cursor(cursor_open_img, Input.CURSOR_ARROW, Vector2.ONE * 16)
+	Input.set_custom_mouse_cursor(cursor_open_img, Input.CURSOR_ARROW, Vector2.ONE * 32)
 
 func set_cursor_closed():
-	Input.set_custom_mouse_cursor(cursor_closed_img, Input.CURSOR_ARROW, Vector2.ONE * 16)
+	Input.set_custom_mouse_cursor(cursor_closed_img, Input.CURSOR_ARROW, Vector2.ONE * 32)
 
 func disable_invincibility():
 	invincible = false
@@ -418,13 +426,17 @@ func hurt():
 		return
 	if dead:
 		return
+	if perma_invincible:
+		return
 	invincible = true
 	$InvincibilityTimer.start()
 	anim_player.play("invincible")
 	cur_health -= 1
 	emit_health_updated()
+	$HurtSounds.play()
 	if cur_health <= 0:
 		dead = true
+		$DeathSound.play()
 		emit_signal("died")
 		g_anim_player.play("dead")
 		$CanvasLayer/DeathMessage.show()
@@ -434,16 +446,19 @@ func pickup_item(item):
 		if item.pickup():
 			cur_health += 1
 			emit_health_updated()
+			$PickedUpHealthSound.play()
 	if item is MaxHealthIncreasePickup:
 		if max_health < MAX_POSSIBLE_HEALTH:
 			if item.pickup():
 				max_health += 1
 				cur_health += 1
 				emit_health_updated()
+				$IncreasedHealthSound.play()
 		elif cur_health < max_health:
 			if item.pickup():
 				cur_health += 1
 				emit_health_updated()
+				$IncreasedHealthSound.play()
 
 func flip():
 	facing_right = !facing_right
@@ -451,6 +466,7 @@ func flip():
 
 func set_just_killed_something_false():
 	just_killed_something = false
+	$PowerfulElectricSound.stop()
 
 func emit_health_updated():
 	emit_signal("health_updated", cur_health, max_health)

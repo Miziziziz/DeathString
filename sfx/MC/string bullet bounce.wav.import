@@ -1,0 +1,21 @@
+[remap]
+
+importer="wav"
+type="AudioStreamSample"
+path="res://.import/string bullet bounce.wav-8952f412d860594a41b8e9484e887237.sample"
+
+[deps]
+
+source_file="res://sfx/MC/string bullet bounce.wav"
+dest_files=[ "res://.import/string bullet bounce.wav-8952f412d860594a41b8e9484e887237.sample" ]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=true
+edit/loop=false
+compress/mode=0

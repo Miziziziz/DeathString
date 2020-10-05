@@ -27,9 +27,15 @@ func load_next_level():
 	if anim_player.current_animation == "fadeout" and anim_player.is_playing():
 		return
 	anim_player.play("fadeout")
+	$EnterPortal.play()
+
+func stop_music():
+	$MainGameMusic.stop()
 
 func complete_level_load():
 	cur_level_ind += 1
+	if cur_level_ind > 0 and cur_level_ind < 11 and !$MainGameMusic.playing:
+		$MainGameMusic.play()
 	if cur_level_ind >= level_list.size():
 		cur_level_ind = 0
 		player_max_health = -1

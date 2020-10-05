@@ -13,12 +13,16 @@ func _ready():
 		if enemy is Enemy or enemy is Boss:
 			enemy.connect("died", self, "enemy_killed")
 
+
+
 func open_portal():
 	$CollisionShape2D.disabled = true
 	is_open = true
-	$Sprite.hide()
+	$Graphics.hide()
 	$CPUParticles2D.emitting = true
-
+	$OpenSound.play()
+	
+	
 func player_entered(body):
 	if is_open:
 		LevelManager.player_cur_health = body.cur_health

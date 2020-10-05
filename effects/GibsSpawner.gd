@@ -1,5 +1,8 @@
 extends Node2D
 
+export var min_move_speed = 0.0
+export var max_move_speed = 60.0
+
 export var min_gibs_spawned = 4
 export var max_gibs_spawned = 7
 
@@ -21,6 +24,8 @@ func spawn_gibs():
 	var num_of_gibs_to_spawn = (randi() % (max_gibs_spawned - min_gibs_spawned)) + min_gibs_spawned
 	for _i in range(num_of_gibs_to_spawn):
 		var gib_inst = gib_obj.instance()
+		gib_inst.min_move_speed = min_move_speed
+		gib_inst.max_move_speed = max_move_speed
 		get_tree().get_root().add_child(gib_inst)
 		gib_inst.global_position = global_position
 	

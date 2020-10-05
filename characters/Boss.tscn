@@ -1,4 +1,4 @@
-[gd_scene load_steps=19 format=2]
+[gd_scene load_steps=38 format=2]
 
 [ext_resource path="res://characters/Boss.gd" type="Script" id=1]
 [ext_resource path="res://characters/BossHealthNode.tscn" type="PackedScene" id=2]
@@ -7,6 +7,25 @@
 [ext_resource path="res://characters/BossHealthDisplay.gd" type="Script" id=5]
 [ext_resource path="res://effects/ElectrifiedEffect.tscn" type="PackedScene" id=6]
 [ext_resource path="res://sprites/boss.png" type="Texture" id=7]
+[ext_resource path="res://sfx/PlayRandomSound.gd" type="Script" id=8]
+[ext_resource path="res://sfx/BOSS/phase 1 attack 4.wav" type="AudioStream" id=9]
+[ext_resource path="res://sfx/BOSS/phase 1 attack 2.wav" type="AudioStream" id=10]
+[ext_resource path="res://sfx/BOSS/phase 1 attack 3.wav" type="AudioStream" id=11]
+[ext_resource path="res://sfx/BOSS/phase 1 attack 1.wav" type="AudioStream" id=12]
+[ext_resource path="res://sfx/BOSS/boss awakens.wav" type="AudioStream" id=13]
+[ext_resource path="res://sfx/BOSS/boss death .wav" type="AudioStream" id=14]
+[ext_resource path="res://effects/GibsSpawner.tscn" type="PackedScene" id=15]
+[ext_resource path="res://music/boss music.ogg" type="AudioStream" id=16]
+[ext_resource path="res://effects/BloodSplat.tscn" type="PackedScene" id=17]
+[ext_resource path="res://sfx/BOSS/boss Phase 2.wav" type="AudioStream" id=18]
+[ext_resource path="res://sfx/BOSS/phase 2 attack 1.wav" type="AudioStream" id=19]
+[ext_resource path="res://sfx/BOSS/phase 2 attack 2.wav" type="AudioStream" id=20]
+[ext_resource path="res://sfx/BOSS/phase 2 attack 3.wav" type="AudioStream" id=21]
+[ext_resource path="res://sfx/BOSS/boss hurt 2.wav" type="AudioStream" id=22]
+[ext_resource path="res://sfx/BOSS/boss hurt 4.wav" type="AudioStream" id=23]
+[ext_resource path="res://sfx/BOSS/boss hurt 5.wav" type="AudioStream" id=24]
+[ext_resource path="res://sfx/BOSS/boss hurt 3.wav" type="AudioStream" id=25]
+[ext_resource path="res://sfx/BOSS/boss hurt 1.wav" type="AudioStream" id=26]
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 24.0
@@ -44,7 +63,7 @@ tracks/1/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=11]
+[sub_resource type="Animation" id=4]
 resource_name = "dead"
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:frame")
@@ -58,9 +77,20 @@ tracks/0/keys = {
 "update": 1,
 "values": [ 4 ]
 }
+tracks/1/type = "value"
+tracks/1/path = NodePath("../DeathBlood:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ true ]
+}
 
-[sub_resource type="Animation" id=4]
-resource_name = "hurt"
+[sub_resource type="Animation" id=5]
 length = 0.4
 tracks/0/type = "value"
 tracks/0/path = NodePath("Sprite:frame")
@@ -89,8 +119,7 @@ tracks/1/keys = {
 } ]
 }
 
-[sub_resource type="Animation" id=5]
-resource_name = "idle"
+[sub_resource type="Animation" id=6]
 length = 0.8
 loop = true
 tracks/0/type = "value"
@@ -105,11 +134,23 @@ tracks/0/keys = {
 "update": 1,
 "values": [ 1, 2, 3, 2 ]
 }
-
-[sub_resource type="StyleBoxFlat" id=6]
-bg_color = Color( 1, 0, 0, 1 )
+tracks/1/type = "value"
+tracks/1/path = NodePath("../DeathBlood:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ false ]
+}
 
 [sub_resource type="StyleBoxFlat" id=7]
+bg_color = Color( 1, 0, 0, 1 )
+
+[sub_resource type="StyleBoxFlat" id=8]
 bg_color = Color( 0, 0, 0, 1 )
 border_width_left = 2
 border_width_top = 2
@@ -120,11 +161,11 @@ expand_margin_right = 2.0
 expand_margin_top = 2.0
 expand_margin_bottom = 2.0
 
-[sub_resource type="DynamicFont" id=8]
+[sub_resource type="DynamicFont" id=9]
 size = 10
 font_data = ExtResource( 4 )
 
-[sub_resource type="Animation" id=9]
+[sub_resource type="Animation" id=10]
 length = 20.0
 loop = true
 tracks/0/type = "value"
@@ -140,7 +181,7 @@ tracks/0/keys = {
 "values": [ 0.0, 360.0 ]
 }
 
-[sub_resource type="Animation" id=10]
+[sub_resource type="Animation" id=11]
 length = 30.0
 loop = true
 step = 1.0
@@ -177,14 +218,14 @@ shape = SubResource( 2 )
 [node name="Sprite" type="Sprite" parent="Graphics"]
 texture = ExtResource( 7 )
 hframes = 6
-frame = 4
+frame = 1
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="Graphics"]
 autoplay = "idle"
 anims/attack = SubResource( 3 )
-anims/dead = SubResource( 11 )
-anims/hurt = SubResource( 4 )
-anims/idle = SubResource( 5 )
+anims/dead = SubResource( 4 )
+anims/hurt = SubResource( 5 )
+anims/idle = SubResource( 6 )
 
 [node name="Sprite" type="Sprite" parent="."]
 visible = false
@@ -192,6 +233,66 @@ self_modulate = Color( 0.964706, 0.0156863, 0.0156863, 1 )
 scale = Vector2( 2, 2 )
 z_index = -1
 texture = ExtResource( 3 )
+
+[node name="DeathBlood" type="Node2D" parent="."]
+visible = false
+z_index = -5
+z_as_relative = false
+
+[node name="BloodSplat" parent="DeathBlood" instance=ExtResource( 17 )]
+play_death_sound = false
+
+[node name="BloodSplat2" parent="DeathBlood" instance=ExtResource( 17 )]
+position = Vector2( 0, -16 )
+play_death_sound = false
+
+[node name="BloodSplat3" parent="DeathBlood" instance=ExtResource( 17 )]
+position = Vector2( -8, -8 )
+play_death_sound = false
+
+[node name="BloodSplat4" parent="DeathBlood" instance=ExtResource( 17 )]
+position = Vector2( 8, -8 )
+play_death_sound = false
+
+[node name="BloodSplat5" parent="DeathBlood" instance=ExtResource( 17 )]
+position = Vector2( 16, 0 )
+play_death_sound = false
+
+[node name="BloodSplat6" parent="DeathBlood" instance=ExtResource( 17 )]
+position = Vector2( 14, -5 )
+play_death_sound = false
+
+[node name="BloodSplat7" parent="DeathBlood" instance=ExtResource( 17 )]
+position = Vector2( 7, 8 )
+play_death_sound = false
+
+[node name="BloodSplat8" parent="DeathBlood" instance=ExtResource( 17 )]
+position = Vector2( 0, -5 )
+play_death_sound = false
+
+[node name="BloodSplat9" parent="DeathBlood" instance=ExtResource( 17 )]
+position = Vector2( -14, 5 )
+play_death_sound = false
+
+[node name="BloodSplat10" parent="DeathBlood" instance=ExtResource( 17 )]
+position = Vector2( -8, 9 )
+play_death_sound = false
+
+[node name="BloodSplat11" parent="DeathBlood" instance=ExtResource( 17 )]
+position = Vector2( -2, 14 )
+play_death_sound = false
+
+[node name="BloodSplat12" parent="DeathBlood" instance=ExtResource( 17 )]
+position = Vector2( -17, -3 )
+play_death_sound = false
+
+[node name="BloodSplat13" parent="DeathBlood" instance=ExtResource( 17 )]
+position = Vector2( -8, -16 )
+play_death_sound = false
+
+[node name="BloodSplat14" parent="DeathBlood" instance=ExtResource( 17 )]
+position = Vector2( 16, 10 )
+play_death_sound = false
 
 [node name="HealthNodes" type="Node2D" parent="."]
 rotation = 1.20924
@@ -258,8 +359,8 @@ margin_left = -188.0
 margin_top = -20.0
 margin_right = 188.0
 margin_bottom = -6.0
-custom_styles/fg = SubResource( 6 )
-custom_styles/bg = SubResource( 7 )
+custom_styles/fg = SubResource( 7 )
+custom_styles/bg = SubResource( 8 )
 value = 50.0
 percent_visible = false
 script = ExtResource( 5 )
@@ -276,16 +377,16 @@ margin_left = -45.0
 margin_top = -6.5
 margin_right = 45.0
 margin_bottom = 6.5
-custom_fonts/font = SubResource( 8 )
+custom_fonts/font = SubResource( 9 )
 text = "Hell Maw"
 
 [node name="SpinAnimationPlayer" type="AnimationPlayer" parent="."]
 autoplay = "spin"
-anims/spin = SubResource( 9 )
+anims/spin = SubResource( 10 )
 
 [node name="SpinAnimationPlayer2" type="AnimationPlayer" parent="."]
 autoplay = "spin"
-anims/spin = SubResource( 10 )
+anims/spin = SubResource( 11 )
 
 [node name="ElectrifiedEffect" parent="." instance=ExtResource( 6 )]
 z_index = 1
@@ -293,3 +394,86 @@ num_lightning_points = 16
 lightning_color = Color( 1, 1, 0.756863, 1 )
 lightning_jitter_amnt = 6.0
 radius = 22
+
+[node name="AwakenSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 13 )
+bus = "Sfx"
+
+[node name="EnterPhase2Sound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 18 )
+bus = "Sfx"
+
+[node name="DeathSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 14 )
+bus = "Sfx"
+
+[node name="Phase1AttackSounds" type="Node2D" parent="."]
+script = ExtResource( 8 )
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="Phase1AttackSounds"]
+stream = ExtResource( 12 )
+bus = "Sfx"
+
+[node name="AudioStreamPlayer2D2" type="AudioStreamPlayer2D" parent="Phase1AttackSounds"]
+stream = ExtResource( 10 )
+bus = "Sfx"
+
+[node name="AudioStreamPlayer2D3" type="AudioStreamPlayer2D" parent="Phase1AttackSounds"]
+stream = ExtResource( 11 )
+bus = "Sfx"
+
+[node name="AudioStreamPlayer2D4" type="AudioStreamPlayer2D" parent="Phase1AttackSounds"]
+stream = ExtResource( 9 )
+bus = "Sfx"
+
+[node name="Phase2AttackSounds2" type="Node2D" parent="."]
+script = ExtResource( 8 )
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="Phase2AttackSounds2"]
+stream = ExtResource( 19 )
+bus = "Sfx"
+
+[node name="AudioStreamPlayer2D2" type="AudioStreamPlayer2D" parent="Phase2AttackSounds2"]
+stream = ExtResource( 20 )
+bus = "Sfx"
+
+[node name="AudioStreamPlayer2D3" type="AudioStreamPlayer2D" parent="Phase2AttackSounds2"]
+stream = ExtResource( 21 )
+bus = "Sfx"
+
+[node name="HurtSounds" type="Node2D" parent="."]
+script = ExtResource( 8 )
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="HurtSounds"]
+stream = ExtResource( 26 )
+bus = "Sfx"
+
+[node name="AudioStreamPlayer2D2" type="AudioStreamPlayer2D" parent="HurtSounds"]
+stream = ExtResource( 22 )
+bus = "Sfx"
+
+[node name="AudioStreamPlayer2D3" type="AudioStreamPlayer2D" parent="HurtSounds"]
+stream = ExtResource( 25 )
+bus = "Sfx"
+
+[node name="AudioStreamPlayer2D4" type="AudioStreamPlayer2D" parent="HurtSounds"]
+stream = ExtResource( 23 )
+bus = "Sfx"
+
+[node name="AudioStreamPlayer2D5" type="AudioStreamPlayer2D" parent="HurtSounds"]
+stream = ExtResource( 24 )
+bus = "Sfx"
+
+[node name="GibsSpawner" parent="." instance=ExtResource( 15 )]
+max_move_speed = 100.0
+min_gibs_spawned = 20
+max_gibs_spawned = 30
+
+[node name="Music" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 16 )
+bus = "Music"
+
+[node name="PlayMusicTimer" type="Timer" parent="."]
+wait_time = 10.0
+one_shot = true
+[connection signal="timeout" from="PlayMusicTimer" to="Music" method="play"]

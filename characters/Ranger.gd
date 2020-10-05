@@ -16,6 +16,7 @@ var time_in_reload_state = 0.0
 func _physics_process(delta):
 	if cur_state == STATES.IDLE:
 		if has_los_target_pos(player.global_position):
+			$AlertSounds.play()
 			set_state_reloading()
 		return
 	
@@ -49,6 +50,7 @@ func shoot_projectile():
 	get_tree().get_root().add_child(energy_bullet_inst)
 	energy_bullet_inst.global_position = global_position
 	energy_bullet_inst.move_vec = global_position.direction_to(player.global_position)
+	$ShootSounds.play()
 
 func set_state_walk():
 	cur_state = STATES.WALK

@@ -1,10 +1,69 @@
-[gd_scene load_steps=5 format=2]
+[gd_scene load_steps=9 format=2]
 
 [ext_resource path="res://circle.png" type="Texture" id=1]
 [ext_resource path="res://projectiles/EnergyBullet.gd" type="Script" id=2]
+[ext_resource path="res://sfx/ENEMY/enemy projectile hits something.wav" type="AudioStream" id=3]
+[ext_resource path="res://sprites/energy_ball/small_energy_ball_spritesheet.png" type="Texture" id=4]
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 3.0
+
+[sub_resource type="Animation" id=4]
+resource_name = "die"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:visible")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ true, false ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Sprite:frame")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ 0, 1 ]
+}
+
+[sub_resource type="Animation" id=3]
+resource_name = "idle"
+length = 0.8
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 2, 3, 2, 3, 2, 3, 2, 3 ]
+}
+tracks/1/type = "value"
+tracks/1/path = NodePath("Sprite:rotation_degrees")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0, 0.2, 0.4, 0.6 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0.0, 90.0, 180.0, 270.0 ]
+}
 
 [sub_resource type="CircleShape2D" id=2]
 radius = 2.97708
@@ -19,7 +78,21 @@ script = ExtResource( 2 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 1 )
 
+[node name="Graphics" type="Node2D" parent="."]
+modulate = Color( 0.541176, 0.909804, 0.996078, 1 )
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Graphics"]
+autoplay = "idle"
+anims/die = SubResource( 4 )
+anims/idle = SubResource( 3 )
+
+[node name="Sprite" type="Sprite" parent="Graphics"]
+texture = ExtResource( 4 )
+hframes = 4
+frame = 2
+
 [node name="Sprite" type="Sprite" parent="."]
+visible = false
 self_modulate = Color( 0, 0.552941, 1, 1 )
 scale = Vector2( 0.18, 0.18 )
 texture = ExtResource( 1 )
@@ -30,3 +103,11 @@ collision_mask = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerDetector"]
 shape = SubResource( 2 )
+
+[node name="HitSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource( 3 )
+bus = "Sfx"
+
+[node name="DeleteTimer" type="Timer" parent="."]
+one_shot = true
+[connection signal="timeout" from="DeleteTimer" to="." method="queue_free"]
