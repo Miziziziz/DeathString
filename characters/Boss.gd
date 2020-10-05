@@ -5,6 +5,8 @@ class_name Boss
 enum STATES {IDLE, FIRST_STAGE, SECOND_STAGE, DEAD}
 var cur_state = STATES.IDLE
 
+onready var anim_player = $Graphics/AnimationPlayer
+
 var player = null
 onready var health_nodes = []
 var first_stage_health = 0
@@ -51,27 +53,40 @@ func _process(delta):
 
 func process_state_first_stage(delta):
 	cur_fire_time += delta
-	if cur_fire_time >= small_projectile_fire_rate:
-		var angle_between_shots = 2 * PI / num_of_small_projectiles_to_fire
-		for i in range(num_of_small_projectiles_to_fire):
-			var energy_bullet_inst = energy_bullet_obj.instance()
-			get_tree().get_root().add_child(energy_bullet_inst)
-			energy_bullet_inst.global_position = global_position
-			var r = i * angle_between_shots
-			energy_bullet_inst.move_vec = Vector2.RIGHT.rotated(r + fire_rotation_offset * angle_between_shots)
+	if cur_fire_time >= small_projectile_fire_rate and anim_player.current_animation != "attack":
 		cur_fire_time = 0.0
-		fire_rotation_offset += 0.2
-		if fire_rotation_offset > 1.0:
-			fire_rotation_offset = 0.0
+		anim_player.play("attack")
 
 func process_state_second_stage(delta):
 	cur_fire_time += delta
-	if cur_fire_time >= large_projectile_fire_rate:
+	if cur_fire_time >= large_projectile_fire_rate and anim_player.current_animation != "attack":
 		cur_fire_time = 0.0
-		var large_energy_bullet_inst = large_energy_bullet_obj.instance()
-		get_tree().get_root().add_child(large_energy_bullet_inst)
-		large_energy_bullet_inst.global_position = global_position
-		large_energy_bullet_inst.move_vec = global_position.direction_to(player.global_position)
+		anim_player.play("attack")
+
+func fire_projectile():
+	if cur_state == STATES.SECOND_STAGE:
+		fire_large_projectile()
+	else:
+		fire_small_projectiles()
+	anim_player.play("idle", 0.2)
+
+func fire_small_projectiles():
+	var angle_between_shots = 2 * PI / num_of_small_projectiles_to_fire
+	for i in range(num_of_small_projectiles_to_fire):
+		var energy_bullet_inst = energy_bullet_obj.instance()
+		get_tree().get_root().add_child(energy_bullet_inst)
+		energy_bullet_inst.global_position = global_position
+		var r = i * angle_between_shots
+		energy_bullet_inst.move_vec = Vector2.RIGHT.rotated(r + fire_rotation_offset * angle_between_shots)
+	fire_rotation_offset += 0.2
+	if fire_rotation_offset > 1.0:
+		fire_rotation_offset = 0.0
+
+func fire_large_projectile():
+	var large_energy_bullet_inst = large_energy_bullet_obj.instance()
+	get_tree().get_root().add_child(large_energy_bullet_inst)
+	large_energy_bullet_inst.global_position = global_position
+	large_energy_bullet_inst.move_vec = global_position.direction_to(player.global_position)
 
 func set_state_first_stage():
 	cur_state = STATES.FIRST_STAGE
@@ -99,21 +114,30 @@ func set_state_dead():
 		if enemy_bullet.has_method("destroy"):
 			enemy_bullet.destroy()
 	emit_signal("died")
+	anim_player.play("dead")
 
 func hurt():
 	if cur_state == STATES.DEAD:
 		return
 	if cur_state == STATES.IDLE:
 		set_state_first_stage()
+	
+	if anim_player.current_animation != "attack":
+		anim_player.play("hurt")
 	if first_stage_health > 0:
 		first_stage_health -= 1
 		if first_stage_health == 0:
 			set_state_second_stage()
 	else:
 		second_stage_health -= 1
+		$ElectrifiedEffect.start_effect()
 		if second_stage_health <= 0:
 			set_state_dead()
 	emit_updated_health()
+
+func play_idle_anim():
+	if anim_player.current_animation == "hurt":
+		anim_player.play("idle")
 
 func emit_updated_health():
 	emit_signal("health_updated", first_stage_health + second_stage_health, start_health)

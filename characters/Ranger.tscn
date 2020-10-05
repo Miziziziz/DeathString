@@ -7,6 +7,12 @@
 [sub_resource type="CircleShape2D" id=1]
 radius = 5.88085
 
+[sub_resource type="CircleShape2D" id=7]
+radius = 10.1295
+
+[sub_resource type="CircleShape2D" id=8]
+radius = 5.90328
+
 [sub_resource type="Animation" id=2]
 resource_name = "idle"
 length = 0.8
@@ -89,12 +95,6 @@ tracks/0/keys = {
 "values": [ 6, 7, 8, 9, 10, 11 ]
 }
 
-[sub_resource type="CircleShape2D" id=7]
-radius = 10.1295
-
-[sub_resource type="CircleShape2D" id=8]
-radius = 5.90328
-
 [node name="Ranger" type="KinematicBody2D" groups=[
 "enemies",
 ]]
@@ -105,22 +105,6 @@ script = ExtResource( 2 )
 shape = SubResource( 1 )
 
 [node name="GibsSpawner" parent="." instance=ExtResource( 3 )]
-
-[node name="Graphics" type="Node2D" parent="."]
-
-[node name="Sprite" type="Sprite" parent="Graphics"]
-position = Vector2( 0, -0.944939 )
-texture = ExtResource( 1 )
-vframes = 5
-hframes = 6
-
-[node name="AnimationPlayer" type="AnimationPlayer" parent="Graphics"]
-autoplay = "idle"
-anims/idle = SubResource( 2 )
-anims/move_down = SubResource( 3 )
-anims/move_left = SubResource( 4 )
-anims/move_right = SubResource( 5 )
-anims/move_up = SubResource( 6 )
 
 [node name="AllyDetector" type="Area2D" parent="."]
 collision_layer = 0
@@ -135,3 +119,20 @@ collision_mask = 4
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerDetector"]
 shape = SubResource( 8 )
+
+[node name="Graphics" type="Node2D" parent="."]
+modulate = Color( 0, 1, 0.0862745, 1 )
+
+[node name="Sprite" type="Sprite" parent="Graphics"]
+position = Vector2( 0, -0.944939 )
+texture = ExtResource( 1 )
+vframes = 5
+hframes = 6
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Graphics"]
+autoplay = "idle"
+anims/idle = SubResource( 2 )
+anims/move_down = SubResource( 3 )
+anims/move_left = SubResource( 4 )
+anims/move_right = SubResource( 5 )
+anims/move_up = SubResource( 6 )

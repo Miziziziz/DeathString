@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=2]
+[gd_scene load_steps=18 format=2]
 
 [ext_resource path="res://characters/Player.gd" type="Script" id=1]
 [ext_resource path="res://circle.png" type="Texture" id=2]
@@ -6,6 +6,74 @@
 [ext_resource path="res://sprites/heart_empty.png" type="Texture" id=4]
 [ext_resource path="res://characters/HealthDisplay.gd" type="Script" id=5]
 [ext_resource path="res://ui/KleintenDynFont.tres" type="DynamicFont" id=6]
+[ext_resource path="res://characters/LevelDisplay.gd" type="Script" id=7]
+[ext_resource path="res://sprites/player.png" type="Texture" id=8]
+
+[sub_resource type="Animation" id=8]
+resource_name = "dead"
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 24 ]
+}
+
+[sub_resource type="Animation" id=6]
+resource_name = "idle"
+length = 0.4
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 0, 1, 2, 3 ]
+}
+
+[sub_resource type="Animation" id=9]
+resource_name = "invincible"
+length = 0.2
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1 ),
+"transitions": PoolRealArray( 1, 1 ),
+"update": 1,
+"values": [ 16, 17 ]
+}
+
+[sub_resource type="Animation" id=7]
+resource_name = "run"
+length = 0.8
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7 ),
+"transitions": PoolRealArray( 1, 1, 1, 1, 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 8, 9, 10, 11, 12, 13, 14, 15 ]
+}
 
 [sub_resource type="CircleShape2D" id=1]
 radius = 5.0
@@ -13,7 +81,7 @@ radius = 5.0
 [sub_resource type="Animation" id=2]
 resource_name = "idle"
 tracks/0/type = "value"
-tracks/0/path = NodePath("Sprite:self_modulate")
+tracks/0/path = NodePath("Graphics:modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
@@ -31,7 +99,7 @@ length = 0.3
 loop = true
 step = 0.05
 tracks/0/type = "value"
-tracks/0/path = NodePath("Sprite:self_modulate")
+tracks/0/path = NodePath("Graphics:modulate")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
@@ -40,11 +108,20 @@ tracks/0/keys = {
 "times": PoolRealArray( 0, 0.15 ),
 "transitions": PoolRealArray( 1, 1 ),
 "update": 1,
-"values": [ Color( 1, 0.207843, 0.207843, 1 ), Color( 1, 1, 1, 1 ) ]
+"values": [ Color( 0.784314, 0.160784, 0.160784, 1 ), Color( 1, 1, 1, 1 ) ]
 }
 
 [sub_resource type="CircleShape2D" id=4]
 radius = 11.0
+
+[sub_resource type="Environment" id=5]
+background_mode = 4
+glow_enabled = true
+glow_intensity = 0.4
+glow_bloom = 0.2
+glow_blend_mode = 0
+adjustment_enabled = true
+adjustment_contrast = 1.2
 
 [node name="Player" type="KinematicBody2D" groups=[
 "player",
@@ -60,10 +137,28 @@ max_rope_width = 2.0
 min_rope_width = 0.5
 rope_kill_width = 1.2
 
+[node name="Graphics" type="Node2D" parent="."]
+z_index = 2
+
+[node name="Sprite" type="Sprite" parent="Graphics"]
+position = Vector2( 0, -4 )
+texture = ExtResource( 8 )
+vframes = 4
+hframes = 8
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Graphics"]
+autoplay = "idle"
+anims/dead = SubResource( 8 )
+anims/idle = SubResource( 6 )
+anims/invincible = SubResource( 9 )
+anims/run = SubResource( 7 )
+
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 1 )
 
 [node name="Sprite" type="Sprite" parent="."]
+visible = false
+self_modulate = Color( 1, 0.207843, 0.207843, 1 )
 scale = Vector2( 0.3, 0.3 )
 texture = ExtResource( 2 )
 
@@ -88,6 +183,7 @@ wait_time = 0.05
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="HealthDisplay" type="GridContainer" parent="CanvasLayer"]
+modulate = Color( 0.278431, 0, 0, 1 )
 margin_right = 40.0
 margin_bottom = 40.0
 columns = 10
@@ -331,6 +427,19 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
+[node name="LevelDisplay" type="Label" parent="CanvasLayer"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -149.0
+margin_bottom = 23.0
+custom_fonts/font = ExtResource( 6 )
+text = "Level 1/10"
+align = 2
+script = ExtResource( 7 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="InvincibilityTimer" type="Timer" parent="."]
 one_shot = true
 
@@ -349,6 +458,9 @@ shape = SubResource( 4 )
 [node name="JustKilledSomethingTimer" type="Timer" parent="."]
 wait_time = 0.5
 one_shot = true
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource( 5 )
 [connection signal="timeout" from="BulletCanCollideWithPlayerTimer" to="." method="bullet_can_collide_with_player"]
 [connection signal="timeout" from="DeactivateRopeTimer" to="." method="deactivate_rope"]
 [connection signal="timeout" from="RopeKillAnimTimer" to="." method="toggle_rope_graphics"]

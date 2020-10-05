@@ -1,21 +1,115 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=19 format=2]
 
 [ext_resource path="res://characters/Boss.gd" type="Script" id=1]
 [ext_resource path="res://characters/BossHealthNode.tscn" type="PackedScene" id=2]
 [ext_resource path="res://circle.png" type="Texture" id=3]
 [ext_resource path="res://ui/KLEINTEN.ttf" type="DynamicFontData" id=4]
 [ext_resource path="res://characters/BossHealthDisplay.gd" type="Script" id=5]
+[ext_resource path="res://effects/ElectrifiedEffect.tscn" type="PackedScene" id=6]
+[ext_resource path="res://sprites/boss.png" type="Texture" id=7]
 
 [sub_resource type="CircleShape2D" id=1]
-radius = 32.0
+radius = 24.0
 
 [sub_resource type="CircleShape2D" id=2]
-radius = 32.9848
+radius = 24.0
 
-[sub_resource type="StyleBoxFlat" id=3]
+[sub_resource type="Animation" id=3]
+resource_name = "attack"
+length = 0.8
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2, 0.4, 0.6 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 2, 3, 4, 5 ]
+}
+tracks/1/type = "method"
+tracks/1/path = NodePath("..")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0.6 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "fire_projectile"
+} ]
+}
+
+[sub_resource type="Animation" id=11]
+resource_name = "dead"
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 4 ]
+}
+
+[sub_resource type="Animation" id=4]
+resource_name = "hurt"
+length = 0.4
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0 ),
+"transitions": PoolRealArray( 1 ),
+"update": 1,
+"values": [ 4 ]
+}
+tracks/1/type = "method"
+tracks/1/path = NodePath("..")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/keys = {
+"times": PoolRealArray( 0.3 ),
+"transitions": PoolRealArray( 1 ),
+"values": [ {
+"args": [  ],
+"method": "play_idle_anim"
+} ]
+}
+
+[sub_resource type="Animation" id=5]
+resource_name = "idle"
+length = 0.8
+loop = true
+tracks/0/type = "value"
+tracks/0/path = NodePath("Sprite:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/keys = {
+"times": PoolRealArray( 0, 0.2, 0.4, 0.6 ),
+"transitions": PoolRealArray( 1, 1, 1, 1 ),
+"update": 1,
+"values": [ 1, 2, 3, 2 ]
+}
+
+[sub_resource type="StyleBoxFlat" id=6]
 bg_color = Color( 1, 0, 0, 1 )
 
-[sub_resource type="StyleBoxFlat" id=4]
+[sub_resource type="StyleBoxFlat" id=7]
 bg_color = Color( 0, 0, 0, 1 )
 border_width_left = 2
 border_width_top = 2
@@ -26,12 +120,11 @@ expand_margin_right = 2.0
 expand_margin_top = 2.0
 expand_margin_bottom = 2.0
 
-[sub_resource type="DynamicFont" id=5]
+[sub_resource type="DynamicFont" id=8]
 size = 10
 font_data = ExtResource( 4 )
 
-[sub_resource type="Animation" id=6]
-resource_name = "spin"
+[sub_resource type="Animation" id=9]
 length = 20.0
 loop = true
 tracks/0/type = "value"
@@ -47,8 +140,7 @@ tracks/0/keys = {
 "values": [ 0.0, 360.0 ]
 }
 
-[sub_resource type="Animation" id=7]
-resource_name = "spin"
+[sub_resource type="Animation" id=10]
 length = 30.0
 loop = true
 step = 1.0
@@ -75,9 +167,30 @@ script = ExtResource( 1 )
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource( 1 )
 
+[node name="PlayerDetector" type="Area2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerDetector"]
+shape = SubResource( 2 )
+
+[node name="Graphics" type="Node2D" parent="."]
+
+[node name="Sprite" type="Sprite" parent="Graphics"]
+texture = ExtResource( 7 )
+hframes = 6
+frame = 4
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="Graphics"]
+autoplay = "idle"
+anims/attack = SubResource( 3 )
+anims/dead = SubResource( 11 )
+anims/hurt = SubResource( 4 )
+anims/idle = SubResource( 5 )
+
 [node name="Sprite" type="Sprite" parent="."]
+visible = false
 self_modulate = Color( 0.964706, 0.0156863, 0.0156863, 1 )
 scale = Vector2( 2, 2 )
+z_index = -1
 texture = ExtResource( 3 )
 
 [node name="HealthNodes" type="Node2D" parent="."]
@@ -134,11 +247,6 @@ position = Vector2( 0, 112 )
 [node name="BossHealthNode8" parent="HealthNodes2" instance=ExtResource( 2 )]
 position = Vector2( -80, 80 )
 
-[node name="PlayerDetector" type="Area2D" parent="."]
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerDetector"]
-shape = SubResource( 2 )
-
 [node name="CanvasLayer" type="CanvasLayer" parent="."]
 
 [node name="BossHealthDisplay" type="ProgressBar" parent="CanvasLayer"]
@@ -150,8 +258,8 @@ margin_left = -188.0
 margin_top = -20.0
 margin_right = 188.0
 margin_bottom = -6.0
-custom_styles/fg = SubResource( 3 )
-custom_styles/bg = SubResource( 4 )
+custom_styles/fg = SubResource( 6 )
+custom_styles/bg = SubResource( 7 )
 value = 50.0
 percent_visible = false
 script = ExtResource( 5 )
@@ -168,13 +276,20 @@ margin_left = -45.0
 margin_top = -6.5
 margin_right = 45.0
 margin_bottom = 6.5
-custom_fonts/font = SubResource( 5 )
+custom_fonts/font = SubResource( 8 )
 text = "Hell Maw"
 
 [node name="SpinAnimationPlayer" type="AnimationPlayer" parent="."]
 autoplay = "spin"
-anims/spin = SubResource( 6 )
+anims/spin = SubResource( 9 )
 
 [node name="SpinAnimationPlayer2" type="AnimationPlayer" parent="."]
 autoplay = "spin"
-anims/spin = SubResource( 7 )
+anims/spin = SubResource( 10 )
+
+[node name="ElectrifiedEffect" parent="." instance=ExtResource( 6 )]
+z_index = 1
+num_lightning_points = 16
+lightning_color = Color( 1, 1, 0.756863, 1 )
+lightning_jitter_amnt = 6.0
+radius = 22

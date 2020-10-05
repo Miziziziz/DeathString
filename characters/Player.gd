@@ -1,6 +1,9 @@
 extends KinematicBody2D
 
+onready var g_sprite = $Graphics/Sprite
+onready var g_anim_player = $Graphics/AnimationPlayer
 onready var anim_player = $AnimationPlayer
+var facing_right = true
 
 const MAX_POSSIBLE_HEALTH = 10
 export var max_health = 3
@@ -55,10 +58,10 @@ func _ready():
 	connect("health_updated", $CanvasLayer/HealthDisplay, "update_health")
 	if LevelManager.player_max_health > 0:
 		max_health = LevelManager.player_max_health
-	if LevelManager.player_cur_health > 0:
-		cur_health = LevelManager.player_cur_health
-	else:
-		cur_health = max_health
+#	if LevelManager.player_cur_health > 0:
+#		cur_health = LevelManager.player_cur_health
+#	else:
+	cur_health = max_health
 	emit_health_updated()
 	
 	$PickupsDetector.connect("area_entered", self, "pickup_item")
@@ -102,9 +105,9 @@ func _process(delta):
 				cur_screen_shake_time = screen_shake_change_rate
 			else:
 				cur_screen_shake_time = 0.0
-		$Camera2D.offset += lerp(Vector2.ZERO, cur_screen_shake_offset, cur_screen_shake_time / screen_shake_change_rate)
-	else:
-		$Camera2D.offset = Vector2.ZERO
+#		$Camera2D.offset += Vector2.ONE * cur_screen_shake_offset
+#	else:
+#		$Camera2D.offset = Vector2.ZERO
 	
 	if Input.is_action_just_pressed("instant_retract"):
 		string_bullet.deactivate()
@@ -147,6 +150,17 @@ func _physics_process(_delta):
 	if Input.is_action_pressed("move_left"):
 		move_vec += Vector2.LEFT
 	move_vec = move_vec.normalized()
+	
+	if move_vec.length_squared() < 0.001:
+		g_anim_player.play("idle")
+	else:
+		g_anim_player.play("run")
+	
+	if move_vec.x > 0.01 and !facing_right:
+		flip()
+	if move_vec.x < -0.01 and facing_right:
+		flip()
+	
 	
 	velocity += move_accel * move_vec - velocity * drag
 	velocity = move_and_slide(velocity, Vector2(), false, 4, 0.785398, false)
@@ -412,6 +426,7 @@ func hurt():
 	if cur_health <= 0:
 		dead = true
 		emit_signal("died")
+		g_anim_player.play("dead")
 		$CanvasLayer/DeathMessage.show()
 
 func pickup_item(item):
@@ -429,6 +444,10 @@ func pickup_item(item):
 			if item.pickup():
 				cur_health += 1
 				emit_health_updated()
+
+func flip():
+	facing_right = !facing_right
+	g_sprite.flip_h = !facing_right
 
 func set_just_killed_something_false():
 	just_killed_something = false

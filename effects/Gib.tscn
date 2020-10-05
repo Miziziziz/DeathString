@@ -13,6 +13,8 @@ radius = 3.74541
 "gibs",
 "instanced",
 ]]
+z_index = -5
+z_as_relative = false
 collision_layer = 0
 script = ExtResource( 2 )
 bounce_curve = SubResource( 1 )

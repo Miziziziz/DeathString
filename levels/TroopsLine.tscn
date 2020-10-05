@@ -1,0 +1,123 @@
+[gd_scene load_steps=10 format=2]
+
+[ext_resource path="res://environment/TileMap.tscn" type="PackedScene" id=1]
+[ext_resource path="res://characters/Player.tscn" type="PackedScene" id=2]
+[ext_resource path="res://characters/Zombie.tscn" type="PackedScene" id=3]
+[ext_resource path="res://characters/Bull.tscn" type="PackedScene" id=4]
+[ext_resource path="res://sprites/tiled_background.png" type="Texture" id=5]
+[ext_resource path="res://pickups/HealthPickup.tscn" type="PackedScene" id=6]
+[ext_resource path="res://environment/Portal.tscn" type="PackedScene" id=8]
+[ext_resource path="res://environment/GroundTileMap.tscn" type="PackedScene" id=9]
+[ext_resource path="res://characters/Ranger.tscn" type="PackedScene" id=10]
+
+[node name="World" type="Node2D"]
+
+[node name="ParallaxBackground" type="ParallaxBackground" parent="."]
+
+[node name="ParallaxLayer" type="ParallaxLayer" parent="ParallaxBackground"]
+motion_scale = Vector2( 0.6, 0.6 )
+motion_mirroring = Vector2( 540, 333 )
+
+[node name="tiled_background" type="Sprite" parent="ParallaxBackground/ParallaxLayer"]
+texture = ExtResource( 5 )
+centered = false
+
+[node name="tiled_background2" type="Sprite" parent="ParallaxBackground/ParallaxLayer"]
+position = Vector2( 180, 0 )
+texture = ExtResource( 5 )
+centered = false
+
+[node name="tiled_background3" type="Sprite" parent="ParallaxBackground/ParallaxLayer"]
+position = Vector2( 0, 111 )
+texture = ExtResource( 5 )
+centered = false
+
+[node name="tiled_background4" type="Sprite" parent="ParallaxBackground/ParallaxLayer"]
+position = Vector2( 180, 111 )
+texture = ExtResource( 5 )
+centered = false
+
+[node name="tiled_background5" type="Sprite" parent="ParallaxBackground/ParallaxLayer"]
+position = Vector2( 360, 111 )
+texture = ExtResource( 5 )
+centered = false
+
+[node name="tiled_background7" type="Sprite" parent="ParallaxBackground/ParallaxLayer"]
+position = Vector2( 0, 222 )
+texture = ExtResource( 5 )
+centered = false
+
+[node name="tiled_background8" type="Sprite" parent="ParallaxBackground/ParallaxLayer"]
+position = Vector2( 180, 222 )
+texture = ExtResource( 5 )
+centered = false
+
+[node name="tiled_background9" type="Sprite" parent="ParallaxBackground/ParallaxLayer"]
+position = Vector2( 360, 222 )
+texture = ExtResource( 5 )
+centered = false
+
+[node name="tiled_background6" type="Sprite" parent="ParallaxBackground/ParallaxLayer"]
+position = Vector2( 360, 0 )
+texture = ExtResource( 5 )
+centered = false
+
+[node name="Navigation2D" type="Navigation2D" parent="." groups=[
+"navigation",
+]]
+
+[node name="GroundTileMap" parent="Navigation2D" instance=ExtResource( 9 )]
+tile_data = PoolIntArray( 262155, 3, 0, 262156, 3, 0, 262157, 3, 0, 262158, 3, 0, 262159, 3, 0, 262160, 3, 0, 262161, 3, 0, 262162, 3, 0, 262163, 3, 0, 262164, 3, 0, 262165, 3, 0, 262166, 3, 0, 262167, 3, 0, 262168, 3, 0, 262169, 3, 0, 262170, 3, 0, 262171, 3, 0, 262172, 3, 0, 262173, 2, 0, 327691, 2, 0, 327692, 2, 0, 327693, 2, 0, 327694, 2, 0, 327695, 2, 0, 327696, 2, 0, 327697, 2, 0, 327698, 2, 0, 327699, 2, 0, 327700, 2, 0, 327701, 2, 0, 327702, 2, 0, 327703, 2, 0, 327704, 2, 0, 327705, 2, 0, 327706, 2, 0, 327707, 2, 0, 327708, 2, 0, 327709, 2, 0, 393227, 2, 0, 393228, 2, 0, 393229, 2, 0, 393230, 2, 0, 393231, 2, 0, 393232, 2, 0, 393233, 2, 0, 393234, 2, 0, 393235, 2, 0, 393236, 2, 0, 393237, 2, 0, 393238, 2, 0, 393239, 2, 0, 393240, 2, 0, 393241, 2, 0, 393242, 2, 0, 393243, 2, 0, 393244, 2, 0, 393245, 2, 0, 458763, 2, 0, 458764, 2, 0, 458765, 2, 0, 458766, 2, 0, 458767, 2, 0, 458768, 2, 0, 458769, 2, 0, 458770, 2, 0, 458771, 2, 0, 458772, 2, 0, 458773, 2, 0, 458774, 2, 0, 458775, 2, 0, 458776, 2, 0, 458777, 2, 0, 458778, 2, 0, 458779, 2, 0, 458780, 2, 0, 458781, 2, 0, 524299, 2, 0, 524300, 2, 0, 524301, 2, 0, 524302, 2, 0, 524303, 2, 0, 524304, 2, 0, 524305, 2, 0, 524306, 2, 0, 524307, 2, 0, 524308, 2, 0, 524309, 2, 0, 524310, 2, 0, 524311, 2, 0, 524312, 2, 0, 524313, 2, 0, 524314, 2, 0, 524315, 2, 0, 524316, 2, 0, 524317, 2, 0, 589835, 2, 0, 589836, 2, 0, 589837, 2, 0, 589838, 2, 0, 589839, 2, 0, 589840, 2, 0, 589841, 2, 0, 589842, 2, 0, 589843, 2, 0, 589844, 2, 0, 589845, 2, 0, 589846, 2, 0, 589847, 2, 0, 589848, 2, 0, 589849, 2, 0, 589850, 2, 0, 589851, 2, 0, 589852, 2, 0, 589853, 2, 0, 655371, 2, 0, 655372, 2, 0, 655373, 2, 0, 655374, 2, 0, 655375, 2, 0, 655376, 2, 0, 655377, 2, 0, 655378, 2, 0, 655379, 2, 0, 655380, 2, 0, 655381, 2, 0, 655382, 2, 0, 655383, 2, 0, 655384, 2, 0, 655385, 2, 0, 655386, 2, 0, 655387, 2, 0, 655388, 2, 0, 655389, 2, 0, 720907, 2, 0, 720908, 2, 0, 720909, 2, 0, 720910, 2, 0, 720911, 2, 0, 720912, 2, 0, 720913, 2, 0, 720914, 2, 0, 720915, 2, 0, 720916, 2, 0, 720917, 2, 0, 720918, 2, 0, 720919, 2, 0, 720920, 2, 0, 720921, 2, 0, 720922, 2, 0, 720923, 2, 0, 720924, 2, 0, 720925, 2, 0, 786443, 2, 0, 786444, 2, 0, 786445, 2, 0, 786446, 2, 0, 786447, 2, 0, 786448, 2, 0, 786449, 2, 0, 786450, 2, 0, 786451, 2, 0, 786452, 2, 0, 786453, 2, 0, 786454, 2, 0, 786455, 2, 0, 786456, 2, 0, 786457, 2, 0, 786458, 2, 0, 786459, 2, 0, 786460, 2, 0, 786461, 2, 0, 851974, 3, 0, 851975, 3, 0, 851976, 3, 0, 851977, 3, 0, 851978, 3, 0, 851979, 2, 0, 851980, 2, 0, 851981, 2, 0, 851982, 2, 0, 851983, 2, 0, 851984, 2, 0, 851985, 2, 0, 851986, 2, 0, 851987, 2, 0, 851988, 2, 0, 851989, 2, 0, 851990, 2, 0, 851991, 2, 0, 851992, 2, 0, 851993, 2, 0, 851994, 2, 0, 851995, 2, 0, 851996, 2, 0, 851997, 2, 0, 917510, 2, 0, 917511, 2, 0, 917512, 2, 0, 917513, 2, 0, 917514, 2, 0, 917515, 2, 0, 917516, 2, 0, 917517, 2, 0, 917518, 2, 0, 917519, 2, 0, 917520, 2, 0, 917521, 2, 0, 917522, 2, 0, 917523, 2, 0, 917524, 2, 0, 917525, 2, 0, 917526, 2, 0, 917527, 2, 0, 917528, 2, 0, 917529, 2, 0, 917530, 2, 0, 917531, 2, 0, 917532, 2, 0, 917533, 2, 0 )
+
+[node name="TileMap" parent="Navigation2D" instance=ExtResource( 1 )]
+tile_data = PoolIntArray( 131082, 1, 196609, 131083, 1, 3, 131084, 1, 3, 131085, 1, 3, 131086, 1, 3, 131087, 1, 3, 131088, 1, 3, 131089, 1, 3, 131090, 1, 3, 131091, 1, 3, 131092, 1, 3, 131093, 1, 3, 131094, 1, 3, 131095, 1, 3, 131096, 1, 3, 131097, 1, 3, 131098, 1, 3, 131099, 1, 3, 131100, 1, 3, 131101, 1, 0, 196618, 1, 131072, 196619, 1, 131073, 196620, 1, 131073, 196621, 1, 131073, 196622, 1, 131073, 196623, 1, 131073, 196624, 1, 131073, 196625, 1, 131073, 196626, 1, 131073, 196627, 1, 131073, 196628, 1, 131073, 196629, 1, 131073, 196630, 1, 131073, 196631, 1, 131073, 196632, 1, 131073, 196633, 1, 131073, 196634, 1, 131073, 196635, 1, 131073, 196636, 1, 131073, 196637, 1, 196611, 262153, 1, 196609, 262154, 1, 0, 262173, 1, 196609, 262174, 1, 0, 327689, 1, 1, 327690, 1, 131075, 327709, 1, 1, 327710, 1, 131075, 393225, 1, 1, 393226, 1, 131075, 393245, 1, 1, 393246, 1, 131075, 458761, 1, 1, 458762, 1, 131075, 458781, 1, 1, 458782, 1, 131075, 524297, 1, 1, 524298, 1, 131075, 524317, 1, 1, 524318, 1, 131075, 589833, 1, 1, 589834, 1, 131075, 589853, 1, 1, 589854, 1, 131075, 655369, 1, 1, 655370, 1, 131075, 655389, 1, 1, 655390, 1, 131075, 720900, 1, 196609, 720901, 1, 3, 720902, 1, 3, 720903, 1, 3, 720904, 1, 3, 720905, 1, 65537, 720906, 1, 131075, 720925, 1, 1, 720926, 1, 131075, 786436, 1, 1, 786437, 1, 65539, 786438, 1, 131073, 786439, 1, 131073, 786440, 1, 131073, 786441, 1, 131073, 786442, 1, 196611, 786461, 1, 1, 786462, 1, 2, 786463, 1, 0, 851972, 1, 1, 851973, 1, 131075, 851997, 1, 131072, 851998, 1, 131074, 851999, 1, 131075, 917508, 1, 1, 917509, 1, 131075, 917534, 1, 1, 917535, 1, 131075, 983044, 1, 1, 983045, 1, 2, 983046, 1, 3, 983047, 1, 3, 983048, 1, 3, 983049, 1, 3, 983050, 1, 3, 983051, 1, 3, 983052, 1, 3, 983053, 1, 3, 983054, 1, 3, 983055, 1, 3, 983056, 1, 3, 983057, 1, 3, 983058, 1, 3, 983059, 1, 3, 983060, 1, 3, 983061, 1, 3, 983062, 1, 3, 983063, 1, 3, 983064, 1, 3, 983065, 1, 3, 983066, 1, 3, 983067, 1, 3, 983068, 1, 3, 983069, 1, 3, 983070, 1, 196610, 983071, 1, 196611, 1048580, 1, 131072, 1048581, 1, 131073, 1048582, 1, 131073, 1048583, 1, 131073, 1048584, 1, 131073, 1048585, 1, 131073, 1048586, 1, 131073, 1048587, 1, 131073, 1048588, 1, 131073, 1048589, 1, 131073, 1048590, 1, 131073, 1048591, 1, 131073, 1048592, 1, 131073, 1048593, 1, 131073, 1048594, 1, 131073, 1048595, 1, 131073, 1048596, 1, 131073, 1048597, 1, 131073, 1048598, 1, 131073, 1048599, 1, 131073, 1048600, 1, 131073, 1048601, 1, 131073, 1048602, 1, 131073, 1048603, 1, 131073, 1048604, 1, 131073, 1048605, 1, 131073, 1048606, 1, 196611 )
+
+[node name="MapTopLeft" parent="Navigation2D/TileMap" index="0"]
+position = Vector2( 0, 0 )
+
+[node name="MapBotRight" parent="Navigation2D/TileMap" index="1"]
+position = Vector2( 464, 360 )
+
+[node name="Player" parent="." instance=ExtResource( 2 )]
+position = Vector2( 112, 224 )
+
+[node name="Zombie" parent="." instance=ExtResource( 3 )]
+position = Vector2( 264, 152 )
+
+[node name="Zombie2" parent="." instance=ExtResource( 3 )]
+position = Vector2( 312, 152 )
+
+[node name="Zombie3" parent="." instance=ExtResource( 3 )]
+position = Vector2( 336, 152 )
+
+[node name="Zombie4" parent="." instance=ExtResource( 3 )]
+position = Vector2( 376, 152 )
+
+[node name="Bull" parent="." instance=ExtResource( 4 )]
+position = Vector2( 288, 80 )
+
+[node name="Bull2" parent="." instance=ExtResource( 4 )]
+position = Vector2( 344, 80 )
+
+[node name="Ranger" parent="." instance=ExtResource( 10 )]
+position = Vector2( 248, 120 )
+
+[node name="Ranger2" parent="." instance=ExtResource( 10 )]
+position = Vector2( 320, 120 )
+
+[node name="Ranger3" parent="." instance=ExtResource( 10 )]
+position = Vector2( 384, 120 )
+
+[node name="HealthPickup" parent="." instance=ExtResource( 6 )]
+position = Vector2( 192, 80 )
+
+[node name="HealthPickup2" parent="." instance=ExtResource( 6 )]
+position = Vector2( 448, 80 )
+
+[node name="HealthPickup3" parent="." instance=ExtResource( 6 )]
+position = Vector2( 320, 80 )
+
+[node name="Portal" parent="." instance=ExtResource( 8 )]
+position = Vector2( 472, 232 )
+
+[editable path="Navigation2D/TileMap"]

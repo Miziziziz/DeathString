@@ -33,6 +33,10 @@ func set_state_reloading():
 	#anim_player.play("ready_charge")
 	time_in_reload_state = 0.0
 	random_move_vec = Vector2.RIGHT.rotated(rand_range(0.0, 2 * PI))
+	var space_state = get_world_2d().get_direct_space_state()
+	var result = space_state.intersect_ray(global_position, global_position + random_move_vec * 20.0, [], 1)
+	if result:
+		random_move_vec = result.normal
 
 func set_state_attack():
 	cur_state = STATES.ATTACK

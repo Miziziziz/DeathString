@@ -75,6 +75,10 @@ func play_move_anim(travel_dir: Vector2):
 	else:
 		anim_player.play("move_left")
 
+func _process(delta):
+	if has_node("Sprite") and is_instance_valid($Sprite):
+		$Sprite.global_rotation = 0.0
+
 func has_los_target_pos(target_pos: Vector2):
 	var space_state = get_world_2d().get_direct_space_state()
 	var result = space_state.intersect_ray(global_position, target_pos, [], 1)
@@ -98,5 +102,9 @@ func kill(instakill=false):
 		$GibsSpawner.spawn_gibs()
 		emit_signal("died")
 		queue_free()
+		kill_hook()
 		return true
 	return false
+
+func kill_hook():
+	pass

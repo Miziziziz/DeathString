@@ -7,7 +7,7 @@
 radius = 8.0
 
 [sub_resource type="CircleShape2D" id=2]
-radius = 4.0
+radius = 7.54605
 
 [sub_resource type="Curve" id=3]
 _data = [ Vector2( 0, 1 ), 0.0, -0.232468, 0, 0, Vector2( 1, 0 ), -2.35051, 0.0, 0, 0 ]

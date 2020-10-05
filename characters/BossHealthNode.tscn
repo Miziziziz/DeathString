@@ -1,11 +1,11 @@
 [gd_scene load_steps=6 format=2]
 
-[ext_resource path="res://characters/Enemy.gd" type="Script" id=1]
-[ext_resource path="res://circle.png" type="Texture" id=2]
+[ext_resource path="res://characters/BossHealthNode.gd" type="Script" id=1]
+[ext_resource path="res://sprites/boss_orb.png" type="Texture" id=2]
 [ext_resource path="res://effects/GibsSpawner.tscn" type="PackedScene" id=3]
 
 [sub_resource type="CircleShape2D" id=1]
-radius = 8.0
+radius = 10.0071
 
 [sub_resource type="CircleShape2D" id=2]
 
@@ -19,8 +19,6 @@ script = ExtResource( 1 )
 shape = SubResource( 1 )
 
 [node name="Sprite" type="Sprite" parent="."]
-self_modulate = Color( 0.956863, 0.176471, 0.176471, 1 )
-scale = Vector2( 0.5, 0.5 )
 texture = ExtResource( 2 )
 
 [node name="GibsSpawner" parent="." instance=ExtResource( 3 )]
