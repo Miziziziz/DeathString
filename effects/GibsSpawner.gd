@@ -6,7 +6,7 @@ export var max_move_speed = 60.0
 export var min_gibs_spawned = 4
 export var max_gibs_spawned = 7
 
-const MAX_NUM_OF_GIBS_IN_SCENE = 50
+var max_num_of_gibs_in_scene = 50
 
 var gib_obj = preload("res://effects/Gib.tscn")
 var death_impact_obj = preload("res://effects/DeathImpact.tscn")
@@ -29,11 +29,12 @@ func spawn_gibs():
 		get_tree().get_root().add_child(gib_inst)
 		gib_inst.global_position = global_position
 	
+	max_num_of_gibs_in_scene = LevelManager.max_num_of_gibs
 	var gibs_in_scene = get_tree().get_nodes_in_group("gibs")
-	if gibs_in_scene.size() > MAX_NUM_OF_GIBS_IN_SCENE:
+	if gibs_in_scene.size() > max_num_of_gibs_in_scene:
 		var i = 0
 		for gib in gibs_in_scene:
-			if i > gibs_in_scene.size() - MAX_NUM_OF_GIBS_IN_SCENE:
+			if i > gibs_in_scene.size() - max_num_of_gibs_in_scene:
 				break
 			gib.queue_free()
 			i += 1

@@ -5,7 +5,23 @@ onready var anim_player = $CanvasLayer/AnimationPlayer
 var player_max_health = -1
 var player_cur_health = -1
 
+var max_num_of_gibs = 50
+var rope_nodes_to_skip = 1
+
+func set_graphics_low():
+	rope_nodes_to_skip = 3
+	max_num_of_gibs = 10
+	
+func set_graphics_med():
+	rope_nodes_to_skip = 2
+	max_num_of_gibs = 25
+	
+func set_graphics_high():
+	rope_nodes_to_skip = 1
+	max_num_of_gibs = 50
+
 var level_list = [
+	"res://levels/MainScreen.tscn",
 	"res://levels/Intro.tscn",
 	"res://levels/Tutorial.tscn",
 	"res://levels/FirstEncounter.tscn",
@@ -34,7 +50,7 @@ func stop_music():
 
 func complete_level_load():
 	cur_level_ind += 1
-	if cur_level_ind > 0 and cur_level_ind < 11 and !$MainGameMusic.playing:
+	if cur_level_ind > 1 and cur_level_ind < 12 and !$MainGameMusic.playing:
 		$MainGameMusic.play()
 	if cur_level_ind >= level_list.size():
 		cur_level_ind = 0
@@ -45,7 +61,7 @@ func complete_level_load():
 	anim_player.play("fadein")
 
 func get_cur_level_number():
-	return cur_level_ind
+	return cur_level_ind - 1
 
 func get_level_count():
-	return level_list.size() - 3
+	return level_list.size() - 4

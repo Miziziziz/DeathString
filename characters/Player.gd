@@ -52,10 +52,11 @@ export var extra_screen_shake_amnt = 3.0
 export var max_screen_shake_amnt = 2.0
 var screen_shake_change_rate = 0.05
 var cur_screen_shake_time = 0.0
-var cur_screen_shake_offset : Vector2
 var just_killed_something = false
 
 func _ready():
+	$Camera2D.offset = Vector2.ZERO
+	num_of_nodes_to_skip_drawing = LevelManager.rope_nodes_to_skip
 	connect("health_updated", $CanvasLayer/HealthDisplay, "update_health")
 	if LevelManager.player_max_health > 0:
 		max_health = LevelManager.player_max_health
@@ -94,21 +95,7 @@ func _process(delta):
 	
 	if dead:
 		return
-	
-	if use_rope_kill_graphics: # screen shake
-		cur_screen_shake_time += delta
-		if cur_screen_shake_time >= screen_shake_change_rate:
-			var screen_shake_amnt = max_screen_shake_amnt
-			if just_killed_something:
-				screen_shake_amnt += extra_screen_shake_amnt
-			cur_screen_shake_offset = Vector2(rand_range(-screen_shake_amnt, screen_shake_amnt), rand_range(-screen_shake_amnt, screen_shake_amnt))
-			if just_killed_something:
-				cur_screen_shake_time = screen_shake_change_rate
-			else:
-				cur_screen_shake_time = 0.0
-		$Camera2D.offset = Vector2.ONE * cur_screen_shake_offset
-	else:
-		$Camera2D.offset = Vector2.ZERO
+
 	
 	if Input.is_action_just_pressed("instant_retract"):
 		string_bullet.deactivate()
@@ -137,9 +124,25 @@ func _process(delta):
 		if string_bullet.active:
 			shoot_released = true
 	
-func _physics_process(_delta):
+func _physics_process(delta):
 	if dead:
 		return
+	
+	if use_rope_kill_graphics: # screen shake
+		cur_screen_shake_time += delta
+		var cur_screen_shake_offset = Vector2()
+		if cur_screen_shake_time >= screen_shake_change_rate:
+			var screen_shake_amnt = max_screen_shake_amnt
+			if just_killed_something:
+				screen_shake_amnt += extra_screen_shake_amnt
+			cur_screen_shake_offset = Vector2(rand_range(-screen_shake_amnt, screen_shake_amnt), rand_range(-screen_shake_amnt, screen_shake_amnt))
+			if just_killed_something:
+				cur_screen_shake_time = screen_shake_change_rate
+			else:
+				cur_screen_shake_time = 0.0
+		$Camera2D.offset = Vector2.ONE * cur_screen_shake_offset
+	else:
+		$Camera2D.offset = Vector2.ZERO
 	
 	var move_vec = Vector2()
 
@@ -326,6 +329,8 @@ func deactivate_rope():
 	$ElectricSound.stop()
 	update()
 
+
+var num_of_nodes_to_skip_drawing = 1
 func _draw():
 	if cur_active_rope_node_ind < 0:
 		return
@@ -343,9 +348,15 @@ func _draw():
 	var ind = 0
 	var last_rope_node = string_bullet
 	var last_rope_node_pos = Vector2()
+	var nodes_skipped = 0
 	for rope_node in rope_nodes:
 		if ind > cur_active_rope_node_ind:
 			break
+		if nodes_skipped < num_of_nodes_to_skip_drawing and ind != 0 and (nodes_skipped + 1 < cur_active_rope_node_ind):
+			nodes_skipped += 1
+			ind += 1
+			continue
+		nodes_skipped %= num_of_nodes_to_skip_drawing
 		if use_rope_kill_graphics and ind != 0:
 			var cur_max_jitter_amnt = max_lightning_jitter_variance
 			if just_killed_something:
@@ -361,7 +372,7 @@ func _draw():
 		last_rope_node = rope_node
 		
 		ind += 1
-	draw_line(to_local(last_rope_node.global_position), to_local(global_position), rope_color, rope_width)
+	draw_line(to_local(last_rope_node_pos), to_local(global_position), rope_color, rope_width)
 
 func kill_all_touching_rope():
 	var killed_something = false
